@@ -13,13 +13,13 @@ import {
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import type { Campaign, Submission } from '@/lib/types';
-import { fmtNum, fmtUsd, shortAddr, timeAgo, usdToCents } from '@/lib/format';
+import { fmtNum, fmtUsd, shortAddr, timeAgo } from '@/lib/format';
 import { EASE, Reveal } from '@/components/motion';
-import { Badge, Button, Card, Input, Label, Micro, Modal, Progress, Skeleton } from '@/components/ui';
+import { Badge, Button, Card, Input, Label, Micro, Modal, Skeleton } from '@/components/ui';
 import { PlatformIcon } from '@/components/icons';
-import { CurrencyInput } from '@/components/currency-input';
 import { useAuth } from '@/components/providers';
 import { useToast } from '@/components/toast';
+import { EscrowPanel } from '@/components/escrow-panel';
 
 type Tab = 'earnings' | 'campaigns' | 'review';
 
@@ -52,12 +52,12 @@ export default function Dashboard() {
               Your ledger lives here
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-ink-400">
-              Sign in with Whop to open your dashboard — earnings, campaigns and settlements in
-              one place.
+              Connect your Solana wallet to open your dashboard — earnings, campaigns and
+              settlements in one place.
             </p>
             <div className="mt-7 flex justify-center">
               <Button size="lg" loading={signingIn} onClick={() => signIn()}>
-                Sign in with Whop
+                Connect wallet
               </Button>
             </div>
           </Card>
@@ -74,18 +74,20 @@ export default function Dashboard() {
         <div>
           <Micro>Dashboard</Micro>
           <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink-50">
-            {user.username || shortAddr(user.whopUserId ?? user.wallet, 5)}
+            {user.username || shortAddr(user.wallet, 5)}
           </h1>
         </div>
         <div className="flex items-center gap-3">
-          <a
-            href="https://whop.com/"
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-lg border border-ink-700 bg-ink-900 px-4 py-2.5 text-xs font-medium text-ink-300 transition hover:text-ink-50"
-          >
-            Whop balance ↗
-          </a>
+          {user.wallet && (
+            <a
+              href={`https://solscan.io/account/${user.wallet}`}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg border border-ink-700 bg-ink-900 px-4 py-2.5 text-xs font-medium text-ink-300 transition hover:text-ink-50"
+            >
+              Wallet ↗
+            </a>
+          )}
           <Link href="/campaigns/new">
             <Button arrow>
               <Plus className="h-3.5 w-3.5" /> New campaign
@@ -175,7 +177,7 @@ function Earnings() {
   return (
     <div>
       <div className="grid gap-px overflow-hidden rounded-xl border border-ink-700 bg-ink-700 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Settled to Whop" usd value={totals.paid} strong />
+        <Stat label="Settled to your wallet" usd value={totals.paid} strong />
         <Stat label="Approved earnings" usd value={totals.earned} />
         <Stat label="Verified views" value={totals.views} />
         <Stat label="Clips in review" value={totals.pending} />
@@ -241,7 +243,7 @@ function Earnings() {
                       </button>
                     )}
                     {s.lastTx && (
-                      <span className="text-[10px] text-ink-500" title="Last Whop transfer">
+                      <span className="text-[10px] text-ink-500" title="Last payout transaction">
                         transfer {shortAddr(s.lastTx, 6)}
                       </span>
                     )}
@@ -336,8 +338,7 @@ function CampaignRow({
   const [subs, setSubs] = useState<Submission[] | null>(null);
   const [review, setReview] = useState<Submission | null>(null);
   const [paying, setPaying] = useState<string | null>(null);
-  const [topUp, setTopUp] = useState('');
-  const [busy, setBusy] = useState<'fund' | 'withdraw' | 'status' | null>(null);
+  const [busy, setBusy] = useState<'withdraw' | 'status' | null>(null);
 
   const remaining = Math.max(0, c.budgetCents - c.spentCents);
 
@@ -354,13 +355,13 @@ function CampaignRow({
   async function pay(s: Submission) {
     setPaying(s.id);
     try {
-      const res = await api<{ submission: Submission; payout: { amountCents: number; partial: boolean } }>(
+      const res = await api<{ submission: Submission; payout: { amountCents: number; partial: boolean; status: string } }>(
         `/api/submissions/${s.id}/pay`,
         { method: 'POST' }
       );
       toast(
         'success',
-        `${fmtUsd(res.payout.amountCents)} sent to ${shortAddr(s.clipperWallet)}'s Whop balance${res.payout.partial ? ' (partial — budget low)' : ''}`
+        `${fmtUsd(res.payout.amountCents)} ${res.payout.status === 'confirmed' ? 'sent' : 'queued'} to ${shortAddr(s.clipperWallet)}${res.payout.partial ? ' (partial — budget low)' : ''}`
       );
       loadSubs();
       onChange();
@@ -371,30 +372,11 @@ function CampaignRow({
     }
   }
 
-  async function fund() {
-    const amountCents = usdToCents(Number(topUp));
-    if (!Number.isFinite(amountCents) || amountCents < 100) return toast('error', 'Minimum top-up is $1');
-    setBusy('fund');
-    try {
-      const { checkoutUrl } = await api<{ checkoutUrl: string }>(`/api/campaigns/${c.id}/fund`, {
-        method: 'POST',
-        body: { amountCents },
-      });
-      window.open(checkoutUrl, '_blank', 'noopener');
-      toast('info', 'Finish checkout on Whop — the budget updates once Whop confirms the payment');
-      setTopUp('');
-    } catch (e: any) {
-      toast('error', e.message || 'Top-up failed');
-    } finally {
-      setBusy(null);
-    }
-  }
-
   async function withdraw() {
     setBusy('withdraw');
     try {
       const res = await api<{ amountCents: number }>(`/api/campaigns/${c.id}/withdraw`, { method: 'POST' });
-      toast('success', `${fmtUsd(res.amountCents)} returned to your Whop balance`);
+      toast('success', `${fmtUsd(res.amountCents)} refunded to your wallet`);
       onChange();
     } catch (e: any) {
       toast('error', e.message);
@@ -464,28 +446,11 @@ function CampaignRow({
           >
             <div className="border-t border-ink-800 px-6 py-6">
               <div className="mb-6">
-                <Progress value={c.budgetCents ? (c.spentCents / c.budgetCents) * 100 : 0} />
-                <div className="mt-2 flex justify-between text-xs font-medium text-ink-500">
-                  <span>{fmtUsd(c.spentCents)} settled</span>
-                  <span>{fmtUsd(c.budgetCents)} deposited</span>
-                </div>
+                <EscrowPanel campaignId={c.id} owner={isOwner} onFunded={onChange} />
               </div>
 
               {/* treasury controls */}
               <div className="flex flex-wrap items-end gap-3 rounded-xl border border-ink-800 bg-ink-900/60 p-4">
-                {isOwner && (
-                <div>
-                  <Label>Top up budget</Label>
-                  <div className="flex items-start gap-2">
-                    <div className="w-60">
-                      <CurrencyInput usd={topUp} onUsd={setTopUp} step="1" />
-                    </div>
-                    <Button loading={busy === 'fund'} onClick={fund}>
-                      Deposit
-                    </Button>
-                  </div>
-                </div>
-                )}
                 <div className="ml-auto flex flex-wrap gap-2">
                   {c.status === 'ACTIVE' && (
                     <Button variant="outline" loading={busy === 'status'} onClick={() => setStatus('PAUSED')}>
@@ -573,7 +538,7 @@ function CampaignRow({
                                   Edit views
                                 </button>
                                 {s.lastTx && (
-                                  <span className="font-mono text-[10px] text-ink-500" title="Last Whop transfer">
+                                  <span className="font-mono text-[10px] text-ink-500" title="Last payout transaction">
                                     {shortAddr(s.lastTx, 6)}
                                   </span>
                                 )}

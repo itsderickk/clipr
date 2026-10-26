@@ -19,7 +19,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
       return NextResponse.json({ error: 'Only the campaign creator or an admin can review submissions' }, { status: 403 });
 
     const rows = await db()`
-      select s.*, coalesce(u.whop_user_id, u.wallet) as clipper_wallet,
+      select s.*, u.wallet as clipper_wallet,
         (select p.transfer_id from payouts p where p.submission_id = s.id order by p.created_at desc limit 1) as last_tx
       from submissions s join users u on u.id = s.clipper_id
       where s.campaign_id = ${params.id}

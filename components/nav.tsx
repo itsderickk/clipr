@@ -98,7 +98,7 @@ function AccountChip() {
     );
   }
 
-  const name = user.username || shortAddr(user.whopUserId ?? user.wallet);
+  const name = user.username || shortAddr(user.wallet);
   return (
     <div ref={ref} className="relative w-full">
       <AnimatePresence>
@@ -133,7 +133,7 @@ function AccountChip() {
         <span className="hidden min-w-0 flex-1 xl:block">
           <span className="block truncate text-[15px] font-bold leading-5 text-ink-50">{name}</span>
           <span className="block truncate text-[15px] leading-5 text-ink-500">
-            {user.username ? `@${user.username}` : 'Whop account'}
+            {user.username ? `@${user.username}` : shortAddr(user.wallet, 6)}
           </span>
         </span>
         <MoreHorizontal className="hidden h-5 w-5 text-ink-50 xl:block" />
@@ -194,7 +194,7 @@ export function Nav() {
         <div className="w-20">
           {user && (
             <Link href="/dashboard" aria-label="Dashboard">
-              <Avatar name={user.username || user.whopUserId || 'C'} size="sm" />
+              <Avatar name={user.username || user.wallet || 'C'} size="sm" />
             </Link>
           )}
         </div>

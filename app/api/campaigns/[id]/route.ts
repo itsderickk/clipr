@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const rows = await db()`
-      select c.*, coalesce(u.whop_user_id, u.wallet) as creator_wallet,
+      select c.*, u.wallet as creator_wallet,
         (select count(*) from submissions s where s.campaign_id = c.id) as submission_count,
         (select count(*) from submissions s where s.campaign_id = c.id and s.status = 'PENDING') as pending_count
       from campaigns c join users u on u.id = c.creator_id

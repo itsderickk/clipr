@@ -1,7 +1,8 @@
 /**
  * Seeds a demo creator + three demo campaigns so the marketplace isn't empty.
- * The demo creator has no Whop account, so nobody can sign in as it and its
- * campaigns can't move money — their budgets are display-only.
+ * The demo creator's wallet is a placeholder nobody holds a key for, so nobody
+ * can sign in as it, and its campaigns have no escrow wallet — their budgets
+ * are display-only.
  *
  *   DATABASE_URL=postgresql://... node scripts/seed.mjs
  *

@@ -20,7 +20,7 @@ import { AnimatedNumber, EASE, Marquee, Reveal } from '@/components/motion';
 import { Button } from '@/components/ui';
 import { PlatformIcon } from '@/components/icons';
 
-type Activity = { kind: 'payout' | 'campaign' | 'clip'; amount: number; wallet: string | null; title: string; createdAt: string };
+type Activity = { kind: 'payout' | 'deposit' | 'campaign' | 'clip'; amount: number; wallet: string | null; title: string; createdAt: string };
 
 /* Shown in the ticker only until real campaigns exist; every card is labelled "Example". */
 const EXAMPLES: Pick<Campaign, 'id' | 'title' | 'platforms' | 'ratePerThousand' | 'budgetCents' | 'spentCents'>[] = [
@@ -32,26 +32,26 @@ const EXAMPLES: Pick<Campaign, 'id' | 'title' | 'platforms' | 'ratePerThousand' 
 ];
 
 const LEDGER = [
-  ['campaign_id', 'uuid', 'rides on the Whop payment itself'],
+  ['campaign_id', 'uuid', 'one escrow wallet per campaign'],
   ['budget_cents', 'int64', 'credited once per signed webhook'],
   ['rate_per_1k', 'int64', 'set by the creator, public to clippers'],
   ['min_views', 'int64', 'clips under it earn nothing'],
   ['max_payout', 'int64 | null', 'optional cap per clip'],
   ['earned', 'int64', 'floor(views × rate ÷ 1,000)'],
-  ['paid', 'int64', 'written only after Whop confirms'],
+  ['paid', 'int64', 'reserved, then settled on chain'],
   ['owed', 'int64', 'earned − paid, so nothing double-pays'],
 ];
 
 const STEPS = [
-  { n: '01', title: 'Fund', body: 'A creator posts the source, sets a rate per 1,000 views and funds the budget through Whop checkout.' },
+  { n: '01', title: 'Fund', body: 'A creator posts the source, sets a rate per 1,000 views and funds its escrow wallet.' },
   { n: '02', title: 'Clip', body: 'Clippers cut the moments that work, post to TikTok, YouTube, Instagram or X and submit the link.' },
   { n: '03', title: 'Verify', body: 'Each submission is reviewed against the campaign. YouTube views pull automatically.' },
-  { n: '04', title: 'Get paid', body: "Approved clips earn the posted rate. A Whop transfer lands in the clipper's balance in seconds." },
+  { n: '04', title: 'Get paid', body: "Approved clips earn the posted rate. USDC lands in the clipper's wallet in seconds." },
 ];
 
 const FAQ = [
-  { q: 'Who pays, and how?', a: 'Creators fund campaigns through Whop checkout: card, Apple Pay, bank transfer or crypto. Clipr never touches card details.' },
-  { q: 'How are clippers paid?', a: "Approved clips earn the posted rate per 1,000 verified views, sent as a Whop transfer into the clipper's own balance. Withdraw to banks, cards and wallets in 241+ territories." },
+  { q: 'Who pays, and how?', a: 'Creators send USDC to the campaign\'s own escrow wallet. Clipr holds it and pays clippers from it, and every movement is on the ledger.' },
+  { q: 'How are clippers paid?', a: "Approved clips earn the posted rate per 1,000 verified views, sent as USDC from the campaign wallet straight to the clipper's own wallet." },
   { q: 'What if a clip keeps getting views?', a: 'Each settlement pays only the difference between what a clip has earned and what it has already been paid, up to the campaign cap.' },
   { q: 'Can creators get unspent budget back?', a: 'Yes. Remaining budget can be withdrawn from the campaign at any time.' },
 ];
@@ -229,7 +229,7 @@ export default function Landing() {
             className="inline-flex items-center gap-2 rounded-full border border-ink-700 bg-ink-950/60 px-3 py-1 text-[13px] font-medium text-ink-300 backdrop-blur"
           >
             <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-brand-400" />
-            Clip-to-earn marketplace · payments by Whop
+            Clip-to-earn marketplace · escrow per campaign
           </motion.div>
 
           <motion.h1
@@ -249,7 +249,7 @@ export default function Landing() {
             className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-ink-400"
           >
             Creators fund a campaign and set a rate per 1,000 views. Clippers post, views get verified, and payouts
-            land in their Whop balance in seconds.
+            land in their wallet in seconds.
           </motion.p>
 
           <motion.div
@@ -298,7 +298,7 @@ export default function Landing() {
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="font-display text-xl font-bold text-ink-50">Payouts</h3>
-                  <p className="mt-1 text-[15px] text-ink-400">Approved clips settle straight to Whop.</p>
+                  <p className="mt-1 text-[15px] text-ink-400">Approved clips settle straight to your wallet.</p>
                 </div>
                 <OpenLink href="/dashboard" />
               </div>
@@ -363,8 +363,8 @@ export default function Landing() {
           <Reveal delay={0.18} className="md:col-span-2">
             <Tile className="h-full">
               <Wallet className="h-6 w-6 text-ink-50" />
-              <h3 className="mt-5 font-display text-lg font-bold text-ink-50">Withdraw anywhere</h3>
-              <p className="mt-1 text-[15px] leading-relaxed text-ink-400">Banks, cards and wallets in 241+ territories through Whop.</p>
+              <h3 className="mt-5 font-display text-lg font-bold text-ink-50">Withdraw anytime</h3>
+              <p className="mt-1 text-[15px] leading-relaxed text-ink-400">Unspent budget goes back to the creator's wallet.</p>
             </Tile>
           </Reveal>
         </div>
@@ -421,13 +421,13 @@ export default function Landing() {
               <div>
                 <h3 className="text-[15px] font-bold text-ink-50">Funding</h3>
                 <p className="mt-1 text-[15px] leading-relaxed text-ink-400">
-                  Whop signs every payment event. Clipr verifies the signature and credits the budget exactly once.
+                  Each campaign has its own escrow wallet. Every deposit is credited exactly once.
                 </p>
               </div>
               <div>
                 <h3 className="text-[15px] font-bold text-ink-50">Transfers</h3>
                 <p className="mt-1 text-[15px] leading-relaxed text-ink-400">
-                  Payouts run with an idempotence key, and the payout row is written only after Whop confirms.
+                  Payouts are reserved in the ledger first, so a retry can never pay twice.
                 </p>
               </div>
             </div>
@@ -486,7 +486,7 @@ export default function Landing() {
                     <div className="truncate text-[15px] text-ink-50">
                       <span className="font-bold">{shortAddr(a.wallet)}</span>{' '}
                       <span className="text-ink-400">
-                        {a.kind === 'payout' ? 'was paid for' : a.kind === 'clip' ? 'submitted a clip to' : 'launched'}
+                        {a.kind === 'payout' ? 'was paid for' : a.kind === 'deposit' ? 'funded' : a.kind === 'clip' ? 'submitted a clip to' : 'launched'}
                       </span>{' '}
                       {a.title}
                     </div>
