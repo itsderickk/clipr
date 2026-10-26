@@ -8,7 +8,7 @@ export async function GET() {
   try {
     const [agg] = await db()`
       select
-        coalesce((select sum(amount_cents) from payouts), 0) as total_paid,
+        coalesce((select sum(amount_cents) from ledger_entries where kind = 'payout' and status = 'confirmed'), 0) as total_paid,
         (select count(*) from campaigns where status = 'ACTIVE') as active_campaigns,
         (select count(*) from submissions) as total_clips,
         coalesce((select sum(views) from submissions where status = 'APPROVED'), 0) as total_views,
@@ -16,16 +16,17 @@ export async function GET() {
     `;
 
     const activity = await db()`
-      (select 'payout' as kind, p.amount_cents as amount, coalesce(u.whop_user_id, u.wallet) as wallet, c.title, p.created_at
-         from payouts p join users u on u.id = p.clipper_id join campaigns c on c.id = p.campaign_id
-         order by p.created_at desc limit 6)
+      (select e.kind, e.amount_cents as amount, u.wallet as wallet, c.title, e.created_at
+         from ledger_entries e left join users u on u.id = e.counterparty_id join campaigns c on c.id = e.campaign_id
+         where e.status = 'confirmed' and e.kind in ('payout', 'deposit')
+         order by e.created_at desc limit 8)
       union all
-      (select 'campaign' as kind, c.rate_per_thousand as amount, coalesce(u.whop_user_id, u.wallet) as wallet, c.title, c.created_at
+      (select 'campaign' as kind, c.rate_per_thousand as amount, u.wallet as wallet, c.title, c.created_at
          from campaigns c join users u on u.id = c.creator_id
          where c.status = 'ACTIVE'
          order by c.created_at desc limit 6)
       union all
-      (select 'clip' as kind, 0 as amount, coalesce(u.whop_user_id, u.wallet) as wallet, c.title, s.created_at
+      (select 'clip' as kind, 0 as amount, u.wallet as wallet, c.title, s.created_at
          from submissions s join users u on u.id = s.clipper_id join campaigns c on c.id = s.campaign_id
          order by s.created_at desc limit 6)
       order by created_at desc

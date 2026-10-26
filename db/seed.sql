@@ -8,8 +8,7 @@
 -- RESET: remove the demo rows created by scripts/seed.mjs
 -- (safe order for foreign keys)
 -- ---------------------------------------------------------------------------
--- delete from payouts     where campaign_id in (select c.id from campaigns c join users u on u.id = c.creator_id where u.username = 'demo-creator');
--- delete from deposits    where campaign_id in (select c.id from campaigns c join users u on u.id = c.creator_id where u.username = 'demo-creator');
+-- delete from ledger_entries where campaign_id in (select c.id from campaigns c join users u on u.id = c.creator_id where u.username = 'demo-creator');
 -- delete from submissions where campaign_id in (select c.id from campaigns c join users u on u.id = c.creator_id where u.username = 'demo-creator');
 -- delete from campaigns   where creator_id  in (select id from users where username = 'demo-creator');
 -- delete from users       where username = 'demo-creator';

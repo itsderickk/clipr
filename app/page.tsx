@@ -18,7 +18,7 @@ import { AnimatedNumber, EASE, Marquee, Reveal } from '@/components/motion';
 import { Button } from '@/components/ui';
 import { PlatformIcon } from '@/components/icons';
 
-type Activity = { kind: 'payout' | 'campaign' | 'clip'; amount: number; wallet: string | null; title: string; createdAt: string };
+type Activity = { kind: 'payout' | 'deposit' | 'campaign' | 'clip'; amount: number; wallet: string | null; title: string; createdAt: string };
 
 /* Shown in the ticker only until real campaigns exist. */
 const EXAMPLES: Pick<Campaign, 'id' | 'title' | 'platforms' | 'ratePerThousand' | 'budgetCents' | 'spentCents'>[] = [
@@ -42,19 +42,19 @@ const SIM = [
 const SIM_START = [48210, 126400, 31900, 72300, 18800, 95200];
 
 const LEDGER = [
-  ['campaign_id', 'uuid', 'one budget per campaign'],
-  ['budget_cents', 'int64', 'funded up front'],
+  ['campaign_id', 'uuid', 'one escrow wallet per campaign'],
+  ['budget_cents', 'int64', 'credited once per deposit'],
   ['rate_per_1k', 'int64', 'set by the creator, public to clippers'],
   ['min_views', 'int64', 'clips under it earn nothing'],
   ['max_payout', 'int64 | null', 'optional cap per clip'],
   ['earned', 'int64', 'floor(views × rate ÷ 1,000)'],
-  ['paid', 'int64', 'written once the transfer settles'],
+  ['paid', 'int64', 'reserved, then settled on chain'],
   ['owed', 'int64', 'earned − paid, so nothing double-pays'],
 ];
 
 const FAQ = [
-  { q: 'How does a campaign get funded?', a: 'The creator funds the full budget up front. The remaining budget is public, so clippers know the money is there before they edit a frame.' },
-  { q: 'How are clippers paid?', a: 'Approved clips earn the posted rate for every 1,000 verified views, paid out from the campaign budget.' },
+  { q: 'How does a campaign get funded?', a: "Creators send USDC to the campaign's own escrow wallet. Clipr holds it and pays clippers from it, and every movement is on the ledger." },
+  { q: 'How are clippers paid?', a: "Approved clips earn the posted rate per 1,000 verified views, sent as USDC from the campaign wallet straight to the clipper's own wallet." },
   { q: 'What if a clip keeps getting views?', a: 'Each settlement pays only the difference between what a clip has earned and what it has already been paid, up to the campaign cap.' },
   { q: 'Can creators get unspent budget back?', a: 'Yes. Remaining budget can be withdrawn from the campaign at any time.' },
 ];
@@ -494,13 +494,13 @@ export default function Landing() {
                   {shown.map((a, i) => (
                     <div key={i} className="flex items-center gap-4 border-b border-ink-800 px-5 py-4 last:border-b-0">
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-500/10 text-brand-300">
-                        {a.kind === 'payout' ? <Wallet className="h-4 w-4" /> : a.kind === 'clip' ? <Scissors className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                        {a.kind === 'payout' || a.kind === 'deposit' ? <Wallet className="h-4 w-4" /> : a.kind === 'clip' ? <Scissors className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
                       </span>
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-[15px] text-ink-50">
                           <span className="font-bold">{shortAddr(a.wallet)}</span>{' '}
                           <span className="text-ink-400">
-                            {a.kind === 'payout' ? 'was paid for' : a.kind === 'clip' ? 'submitted a clip to' : 'launched'}
+                            {a.kind === 'payout' ? 'was paid for' : a.kind === 'deposit' ? 'funded' : a.kind === 'clip' ? 'submitted a clip to' : 'launched'}
                           </span>{' '}
                           {a.title}
                         </div>

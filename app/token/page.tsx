@@ -264,7 +264,7 @@ export default function TokenPage() {
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-300">
           The economic layer of Clipr. Every settlement that clears through a campaign budget
           routes <span className="text-ink-50">10% to the protocol</span> — clippers keep the other
-          90%, paid straight to their Whop balance.
+          90%, paid straight to their wallet.
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-3">
           <Micro>Contract</Micro>

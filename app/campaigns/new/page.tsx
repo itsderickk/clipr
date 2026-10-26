@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { api } from '@/lib/api';
 import type { Campaign, Platform } from '@/lib/types';
-import { fmtUsd, PLATFORMS, usdToCents } from '@/lib/format';
+import { fmtUsd, PLATFORMS, shortAddr, usdToCents } from '@/lib/format';
+import { EscrowPanel } from '@/components/escrow-panel';
 import { EASE } from '@/components/motion';
 import { Button, Card, Input, Label, Micro, Textarea } from '@/components/ui';
 import { PlatformIcon } from '@/components/icons';
@@ -37,13 +38,9 @@ export default function NewCampaign() {
 
   const [creating, setCreating] = useState(false);
   const [campaign, setCampaign] = useState<Campaign | null>(null);
-  const [deposit, setDeposit] = useState('1');
-  const [funding, setFunding] = useState(false);
-  const [waiting, setWaiting] = useState(false);
   const [funded, setFunded] = useState<number | null>(null);
-  const poll = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Signing in leaves the page for Whop, so keep the draft across the round trip.
+  // Keep the draft across reloads and sign-in.
   useEffect(() => {
     try {
       const d = JSON.parse(sessionStorage.getItem(DRAFT_KEY) || 'null');
@@ -59,9 +56,6 @@ export default function NewCampaign() {
         setStep(2);
       }
     } catch {}
-    return () => {
-      if (poll.current) clearInterval(poll.current);
-    };
   }, []);
 
   const go = (next: number) => {
@@ -113,40 +107,6 @@ export default function NewCampaign() {
       toast('error', e.message);
     } finally {
       setCreating(false);
-    }
-  }
-
-  async function fundBudget() {
-    if (!campaign) return;
-    const amountCents = usdToCents(Number(deposit));
-    if (!Number.isFinite(amountCents) || amountCents < 100) return toast('error', 'Minimum deposit is $1');
-
-    setFunding(true);
-    try {
-      const { checkoutUrl } = await api<{ checkoutUrl: string }>(`/api/campaigns/${campaign.id}/fund`, {
-        method: 'POST',
-        body: { amountCents },
-      });
-      window.open(checkoutUrl, '_blank', 'noopener');
-      setWaiting(true);
-      // The budget is credited by Whop's signed webhook; watch for it to land.
-      if (poll.current) clearInterval(poll.current);
-      poll.current = setInterval(async () => {
-        try {
-          const { campaign: c } = await api<{ campaign: Campaign }>(`/api/campaigns/${campaign.id}`);
-          if (c.budgetCents > 0) {
-            if (poll.current) clearInterval(poll.current);
-            setCampaign(c);
-            setFunded(c.budgetCents - c.spentCents);
-            setWaiting(false);
-            toast('success', `Budget funded with ${fmtUsd(c.budgetCents)} — campaign is live`);
-          }
-        } catch {}
-      }, 4000);
-    } catch (e: any) {
-      toast('error', e.message || 'Could not start checkout');
-    } finally {
-      setFunding(false);
     }
   }
 
@@ -326,11 +286,11 @@ export default function NewCampaign() {
                 <ReviewRow k="Rate" v={`$${rate} per 1,000 views`} />
                 <ReviewRow k="Min views" v={Number(minViews || 0).toLocaleString()} />
                 <ReviewRow k="Max per clip" v={maxPayout ? `$${maxPayout}` : 'No cap'} />
-                <ReviewRow k="Created by" v={user ? user.username || user.whopUserId || 'You' : 'Sign in with Whop at create'} />
+                <ReviewRow k="Created by" v={user ? user.username || shortAddr(user.wallet) : 'Connect your wallet at create'} />
               </Card>
               <p className="mt-4 text-[13px] leading-relaxed text-ink-400">
-                Creating the campaign saves it as a draft. Nothing is charged until you fund it
-                through Whop checkout in the next step.
+                Creating the campaign saves it as a draft and opens its own escrow wallet. It goes
+                live once your first deposit lands.
               </p>
             </motion.div>
           )}
@@ -347,32 +307,18 @@ export default function NewCampaign() {
               transition={{ duration: 0.4, ease: EASE }}
             >
               {funded == null ? (
-                <Card hover={false} className="p-7">
-                  <h3 className="font-display text-xl font-bold text-ink-50">Fund the budget</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-400">
-                    Pay through Whop checkout — card, Apple Pay, bank transfer or crypto. The campaign
-                    goes live the moment Whop confirms the payment, and you can top up or withdraw
-                    the unspent budget later.
+                <div>
+                  <EscrowPanel campaignId={campaign.id} owner onFunded={setFunded} />
+                  <p className="mt-4 text-[13px] leading-relaxed text-ink-400">
+                    Send USDC to this campaign&apos;s escrow wallet. Clipr holds it and pays clippers
+                    from it; whatever is unspent you can withdraw.
                   </p>
-                  <div className="mt-6 max-w-sm">
-                    <Label>Deposit amount</Label>
-                    <CurrencyInput usd={deposit} onUsd={setDeposit} step="1" />
-                  </div>
                   <div className="mt-6 flex flex-wrap gap-3">
-                    <Button size="lg" arrow loading={funding} onClick={fundBudget}>
-                      Pay with Whop
-                    </Button>
                     <Button size="lg" variant="ghost" onClick={() => router.push('/dashboard?tab=campaigns')}>
                       Fund later
                     </Button>
                   </div>
-                  {waiting && (
-                    <p className="mt-5 border-t border-ink-800 pt-4 font-mono text-[11px] text-ink-400">
-                      Waiting for Whop to confirm your payment<span className="animate-pulse">…</span> Finish
-                      checkout in the new tab; this page updates by itself.
-                    </p>
-                  )}
-                </Card>
+                </div>
               ) : (
                 <Card hover={false} className="p-10 text-center">
                   <motion.div

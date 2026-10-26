@@ -121,15 +121,14 @@ export default function DocsPage() {
             </h2>
             <P>
               Clipr is a marketplace where creators buy distribution and clippers get paid for it.
-              A creator posts a campaign with a rate per 1,000 views and funds a budget through
-              Whop checkout. Clippers cut the source content, post it to TikTok, YouTube,
-              Instagram or X, and submit their links. Approved clips earn the posted rate on
-              verified views, and payouts land in the clipper&apos;s Whop balance — no invoices,
-              no net-30, no middlemen.
+              A creator posts a campaign with a rate per 1,000 views and funds its escrow wallet
+              with USDC. Clippers cut the source content, post it to TikTok, YouTube, Instagram
+              or X, and submit their links. Approved clips earn the posted rate on verified views,
+              and payouts land in the clipper&apos;s wallet — no invoices, no net-30.
             </P>
             <P>
-              Identity is your Whop account: signing in is a standard Whop OAuth sign-in, and the
-              Whop account you sign in with is the one that gets paid.
+              Identity is your Solana wallet: you sign in by signing a one-time message (free, no
+              transaction), and the wallet you sign in with is the one that gets paid.
             </P>
           </section>
 
@@ -140,32 +139,31 @@ export default function DocsPage() {
             </h2>
             <P>
               Every clip lives through the same trace, the one animated on the landing page:{' '}
-              <Mono>ESCROW_FUNDED</Mono> — the creator pays through Whop checkout and the signed
-              payment webhook credits the campaign budget; <Mono>CLIP_SUBMITTED</Mono> — a clipper
+              <Mono>ESCROW_FUNDED</Mono> — the creator sends USDC to the campaign&apos;s escrow
+              wallet and the deposit is credited once the chain finalizes it; <Mono>CLIP_SUBMITTED</Mono> — a clipper
               posts and files the link, which sits pending with no money moving;{' '}
               <Mono>VIEWS_VERIFIED</Mono> — the submission is reviewed against the campaign and a
               view count is attached, automatically from the YouTube Data API for YouTube links
               and at review time for other platforms; and <Mono>PAYOUT_CLEARED</Mono> — Clipr
-              fires an idempotent Whop transfer and it lands in the clipper&apos;s balance, with the
-              transfer id as the receipt.
+              sends USDC from the campaign wallet to the clipper&apos;s wallet, with the transaction
+              signature as the receipt.
             </P>
           </section>
 
           {/* 03 custody */}
           <section id="escrow" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
             <h2 className="font-display text-2xl font-bold text-ink-50">
-              One budget per campaign, Whop as the rails
+              One escrow wallet per campaign
             </h2>
             <P>
-              Creators pay through Whop&apos;s hosted checkout — card, Apple Pay, bank transfer or
-              crypto. Clipr never sees card details. The campaign id rides on the payment as
-              metadata, so every dollar is tied to the campaign it funds.
+              Every campaign gets its own wallet, held by Clipr. Money for one campaign never
+              mixes with another&apos;s: the creator funds that wallet, payouts and refunds leave
+              from it, and its on-chain balance can be checked by anyone.
             </P>
             <P>
-              The budget moves only when Whop says so. Clipr verifies the signature on every
-              webhook, re-reads the payment from the Whop API rather than trusting the event
-              body, and records each payment id once — <Mono>budget = sum of confirmed
-              payments</Mono>. Retries and replays are ignored by design. If a campaign
+              Every movement is an entry in an append-only ledger. Deposits are credited once per
+              on-chain transaction — <Mono>budget = confirmed deposits − refunds</Mono> — so
+              re-scanning the chain can never double-count. If a campaign
               can&apos;t cover the full amount owed on a clip, it pays what it can, records the
               partial, and leaves the remainder owed for the next top-up.
             </P>
@@ -193,12 +191,12 @@ export default function DocsPage() {
             </div>
             <P>
               Even approval moves nothing — it records what&apos;s earned. When the reviewer presses
-              Pay, the server computes <Mono>owed = earned − paid</Mono> and sends a Whop transfer
-              for exactly that delta to the clipper&apos;s Whop account, keyed by an idempotence key
-              derived from the ledger so a double click or retry can&apos;t pay twice. Only after
-              Whop accepts the transfer is the ledger written: the payout row, the clip&apos;s paid
-              total, the campaign&apos;s spend. Whop first, ledger second — a failed transfer can
-              never fabricate a &quot;paid&quot; record. Because views keep growing, the cycle repeats:
+              Pay, the server computes <Mono>owed = earned − paid</Mono>, reserves exactly that
+              amount in the ledger under a key derived from the clip&apos;s state, and only then
+              sends it from the campaign wallet to the clipper&apos;s wallet. A double click or retry
+              hits the same reservation and can&apos;t pay twice; a transfer that fails releases the
+              reservation; one whose outcome is unclear stays pending until it is reconciled
+              against the chain. Because views keep growing, the cycle repeats:
               refresh or re-approve with a higher count and the next Pay settles just the
               difference.
             </P>
@@ -213,15 +211,15 @@ export default function DocsPage() {
               {[
                 {
                   role: 'Creators',
-                  body: 'Own their campaigns end to end: fund and top up the budget, pause and resume the campaign, review submissions, set view counts, settle payouts \u2014 and withdraw the unspent budget back to their own Whop balance at any time.',
+                  body: 'Own their campaigns end to end: fund and top up the budget, pause and resume the campaign, review submissions, set view counts, settle payouts \u2014 and withdraw the unspent budget back to their own wallet at any time.',
                 },
                 {
                   role: 'Clippers',
-                  body: 'Browse live campaigns, submit links from the campaign\u2019s platforms, and track views, earnings and Whop transfer receipts from the dashboard. Payment arrives in the Whop account they signed in with.',
+                  body: 'Browse live campaigns, submit links from the campaign\u2019s platforms, and track views, earnings and payout receipts from the dashboard. Payment arrives in the wallet they signed in with.',
                 },
                 {
                   role: 'Admins',
-                  body: 'Platform operators. A Review tab covers every campaign: they can approve or reject clips, verify views, pause campaigns, and settle payouts from any budget \u2014 but deposits and withdrawals stay creator-only, and payouts they trigger can only go to the submitting clipper\u2019s Whop account.',
+                  body: 'Platform operators. A Review tab covers every campaign: they can approve or reject clips, verify views, pause campaigns, and settle payouts from any budget \u2014 but deposits and withdrawals stay creator-only, and payouts they trigger can only go to the submitting clipper\u2019s wallet.',
                 },
               ].map((r) => (
                 <div key={r.role} className="grid gap-2 px-5 py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
@@ -241,9 +239,9 @@ export default function DocsPage() {
             </h2>
             <P>
               Clipr is custodial in this release, and the docs would be dishonest not to spell out
-              what that means. Campaign budgets sit in the platform&apos;s Whop balance; Clipr&apos;s
-              ledger tracks how much of it belongs to each campaign. What it gives you: regulated
-              payment rails, per-campaign accounting, and a Whop transfer id for every settlement.
+              what that means. Each campaign&apos;s budget sits in its own wallet whose keys Clipr
+              holds. What it gives you: per-campaign wallets you can audit on chain, an
+              append-only ledger, and a transaction signature for every settlement.
               What it does not give you: trustlessness.
             </P>
             <P>
@@ -253,8 +251,8 @@ export default function DocsPage() {
               decides a clip&apos;s view count decides what the budget owes, so admins are bounded by
               visibility — transfer receipts, a payout ledger, and creators who can pause or
               withdraw the moment something looks wrong — rather than by code. Third, the
-              platform operator controls the Whop company that holds the funds: that is what
-              custodial means.
+              platform operator holds the keys to the campaign wallets: that is what custodial
+              means.
             </P>
           </section>
 

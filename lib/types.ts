@@ -5,7 +5,6 @@ export type Platform = 'tiktok' | 'youtube' | 'instagram' | 'x';
 export interface User {
   id: string;
   wallet: string | null;
-  whopUserId?: string | null;
   username: string | null;
   isAdmin?: boolean;
   createdAt: string;
@@ -20,8 +19,8 @@ export interface Campaign {
   sourceUrl: string | null;
   platforms: Platform[];
   ratePerThousand: number; // cents per 1,000 views
-  budgetCents: number; // total funded through Whop checkout
-  spentCents: number; // total paid out or withdrawn
+  budgetCents: number; // confirmed escrow deposits minus refunds
+  spentCents: number; // pending + confirmed payouts
   minViews: number;
   maxPayoutCents: number | null;
   requirements: string | null;

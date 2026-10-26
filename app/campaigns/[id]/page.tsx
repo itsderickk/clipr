@@ -13,6 +13,7 @@ import { Badge, Button, Card, Input, Label, Micro, Progress, Skeleton } from '@/
 import { PlatformIcon } from '@/components/icons';
 import { useAuth } from '@/components/providers';
 import { useToast } from '@/components/toast';
+import { EscrowPanel } from '@/components/escrow-panel';
 
 export default function CampaignDetail() {
   const { id } = useParams<{ id: string }>();
@@ -185,8 +186,8 @@ export default function CampaignDetail() {
                 <h3 className="font-display text-xl font-bold text-ink-50">Submit a clip</h3>
                 <p className="mt-1.5 text-sm text-ink-400">
                   Post your edit, then drop the public link here. Earnings are computed from
-                  verified views at {fmtUsd(c.ratePerThousand)} per 1,000. Payouts land in your Whop
-                  balance.
+                  verified views at {fmtUsd(c.ratePerThousand)} per 1,000. Payouts are sent in USDC
+                  to the wallet you signed in with.
                 </p>
 
                 {c.status !== 'ACTIVE' ? (
@@ -325,11 +326,10 @@ export default function CampaignDetail() {
               </div>
 
               <div className="mt-7 border-t border-ink-800 pt-5">
-                <Micro>Settlement</Micro>
+                <EscrowPanel campaignId={c.id} />
                 <p className="mt-3 text-[11px] leading-relaxed text-ink-500">
-                  The budget is funded through Whop checkout and credited only when Whop confirms the
-                  payment. Approved clips are paid by Whop transfer straight to the clipper&apos;s
-                  Whop balance; unspent budget can be withdrawn by the creator.
+                  This campaign&apos;s budget sits in its own escrow wallet held by Clipr. Every
+                  deposit, payout and refund is on the ledger above.
                 </p>
               </div>
             </Card>
