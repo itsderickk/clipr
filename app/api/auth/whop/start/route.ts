@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
+import { jwtSecret as secret } from '@/lib/auth';
 import { appOrigin, authorizeUrl, newPkce, whopOAuthConfigured } from '@/lib/whop';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const OAUTH_COOKIE = 'clipr_oauth';
-const secret = () => new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret-change-me');
 
 export async function GET(req: NextRequest) {
   const origin = appOrigin(req.url);
