@@ -15,7 +15,7 @@ Start with [`SECURITY.md`](./SECURITY.md) for the threat model and audit map, an
 ```bash
 cp .env.example .env    # fill DATABASE_URL, JWT_SECRET and the escrow settings
 psql "$DATABASE_URL" -f db/schema.sql
-node scripts/seed.mjs   # optional: three demo campaigns
+node scripts/seed.mjs   # optional: one Clipr campaign per platform ($5,000 total)
 npm install && npm run dev
 # → http://localhost:3000
 ```

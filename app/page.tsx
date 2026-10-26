@@ -22,13 +22,13 @@ type Activity = { kind: 'payout' | 'deposit' | 'campaign' | 'clip'; amount: numb
 
 /* Shown in the ticker only until real campaigns exist. */
 const EXAMPLES: Pick<Campaign, 'id' | 'title' | 'platforms' | 'ratePerThousand' | 'budgetCents' | 'spentCents'>[] = [
-  { id: 'ex1', title: 'Podcast — Founder Interviews', platforms: ['tiktok'], ratePerThousand: 100, budgetCents: 50000, spentCents: 12400 },
-  { id: 'ex2', title: 'Keynote — Launch Moments', platforms: ['youtube'], ratePerThousand: 150, budgetCents: 120000, spentCents: 30100 },
-  { id: 'ex3', title: 'Tournament — Highlight Run', platforms: ['instagram'], ratePerThousand: 80, budgetCents: 25000, spentCents: 4200 },
-  { id: 'ex4', title: 'Stream — Best Reactions', platforms: ['x'], ratePerThousand: 120, budgetCents: 60000, spentCents: 21800 },
-  { id: 'ex5', title: 'Album — Studio Sessions', platforms: ['tiktok'], ratePerThousand: 200, budgetCents: 200000, spentCents: 51000 },
-  { id: 'ex6', title: 'Course — Best Lessons', platforms: ['youtube'], ratePerThousand: 90, budgetCents: 40000, spentCents: 9000 },
+  { id: 'ex1', title: 'Clipr — TikTok launch clips', platforms: ['tiktok'], ratePerThousand: 100, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex2', title: 'Clipr — YouTube Shorts explainers', platforms: ['youtube'], ratePerThousand: 150, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex3', title: 'Clipr — Instagram Reels', platforms: ['instagram'], ratePerThousand: 80, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex4', title: 'Clipr — Posts on X', platforms: ['x'], ratePerThousand: 120, budgetCents: 125000, spentCents: 0 },
 ];
+/* $5,000 across the four Clipr campaigns; shown as the live budget until real stats exist. */
+const EXAMPLE_BUDGET_CENTS = EXAMPLES.reduce((t, c) => t + c.budgetCents - c.spentCents, 0);
 
 /* Simulated clips for the hero board. Purely illustrative. */
 const SIM = [
@@ -58,6 +58,10 @@ const FAQ = [
   { q: 'What if a clip keeps getting views?', a: 'Each settlement pays only the difference between what a clip has earned and what it has already been paid, up to the campaign cap.' },
   { q: 'Can creators get unspent budget back?', a: 'Yes. Remaining budget can be withdrawn from the campaign at any time.' },
 ];
+
+/* TikTok's official embed player, muted and looping. Swap the id to feature a different video. */
+const TIKTOK_VIDEO_ID = '7698435898240683295';
+const TIKTOK_EMBED = `https://www.tiktok.com/player/v1/${TIKTOK_VIDEO_ID}?autoplay=1&loop=1&muted=1&controls=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&music_info=0&description=0&rel=0&native_context_menu=0&closed_caption=0`;
 
 const STAGES = ['Post the clip.', 'Watch it grow.', 'Get verified.', 'Get paid.'];
 
@@ -214,7 +218,7 @@ function ClipJourney() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-sm">
+          <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-[18.5rem]">
             <svg viewBox="0 0 100 100" className="pointer-events-none absolute -inset-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)] -rotate-90" aria-hidden>
               <circle cx="50" cy="50" r="48" fill="none" stroke="#16181C" strokeWidth="0.6" />
               <motion.circle cx="50" cy="50" r="48" fill="none" stroke="#A78BFA" strokeWidth="0.6" strokeLinecap="round" style={{ pathLength: ring }} />
@@ -224,11 +228,17 @@ function ClipJourney() {
               transition={{ duration: 0.5 }}
               className="relative overflow-hidden rounded-3xl border border-ink-800 bg-ink-950"
             >
-              <div className="relative aspect-[4/5] bg-gradient-to-br from-ink-800 via-ink-900 to-ink-950">
-                <div aria-hidden className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_40%,rgba(139,92,246,0.25),transparent)]" />
-                <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-ink-950/70 px-2.5 py-1 backdrop-blur">
+              <div className="relative aspect-[9/16] bg-ink-900">
+                <iframe
+                  src={TIKTOK_EMBED}
+                  title="MrBeast on TikTok"
+                  loading="lazy"
+                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                  className="absolute inset-0 h-full w-full border-0"
+                />
+                <div className="pointer-events-none absolute left-4 top-4 flex items-center gap-2 rounded-full bg-ink-950/70 px-2.5 py-1 backdrop-blur">
                   <PlatformIcon platform="tiktok" className="h-4 w-4" />
-                  <span className="text-[13px] font-bold text-ink-50">@example</span>
+                  <span className="text-[13px] font-bold text-ink-50">@mrbeast</span>
                 </div>
                 <AnimatePresence>
                   {verified && (
@@ -243,8 +253,8 @@ function ClipJourney() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <div className="font-display text-5xl font-extrabold tracking-tight text-ink-50 tabular">{views.toLocaleString('en-US')}</div>
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/90 via-ink-950/50 to-transparent p-5 pt-16">
+                  <div className="font-display text-4xl font-extrabold tracking-tight text-ink-50 tabular">{views.toLocaleString('en-US')}</div>
                   <div className="mt-1 flex items-center gap-1.5 text-[14px] text-ink-300">
                     <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-brand-400" /> views
                   </div>
@@ -316,7 +326,7 @@ export default function Landing() {
 
   const statItems = [
     { label: 'Paid to clippers', value: stats?.totalPaidCents ?? 0, fmt: (v: number) => fmtUsd(Math.round(v)) },
-    { label: 'Live budgets', value: stats?.escrowedCents ?? 0, fmt: (v: number) => fmtUsd(Math.round(v)) },
+    { label: 'Live budgets', value: stats?.escrowedCents || EXAMPLE_BUDGET_CENTS, fmt: (v: number) => fmtUsd(Math.round(v)) },
     { label: 'Clips submitted', value: stats?.totalClips ?? 0 },
     { label: 'Verified views', value: stats?.totalViews ?? 0, fmt: (v: number) => fmtNum(Math.round(v)) },
   ];
