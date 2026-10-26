@@ -15,6 +15,14 @@ export async function GET(req: NextRequest) {
   const address = req.nextUrl.searchParams.get('address') || '';
   if (!isSolanaAddress(address)) return NextResponse.json({ error: 'Invalid wallet address' }, { status: 400 });
 
+  try {
+    return await issue(req, address);
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message || 'Could not start sign-in' }, { status: 500 });
+  }
+}
+
+async function issue(req: NextRequest, address: string) {
   const domain = new URL(process.env.NEXT_PUBLIC_APP_URL || req.url).host;
   const message = signInMessage({ domain, address, nonce: newNonce(), issuedAt: new Date().toISOString() });
   const token = await new SignJWT({ address, message })

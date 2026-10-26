@@ -9,6 +9,7 @@ import {
   Coins,
   Home,
   LayoutGrid,
+  LogIn,
   LogOut,
   MoreHorizontal,
   Plus,
@@ -60,7 +61,7 @@ function Logo() {
 
 /** Account chip pinned to the bottom of the sidebar, with an X-style popover menu. */
 function AccountChip() {
-  const { user, signIn, signingIn, signOut } = useAuth();
+  const { user, wallet, signIn, signingIn, signOut } = useAuth();
   const [menu, setMenu] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -75,7 +76,8 @@ function AccountChip() {
     return () => document.removeEventListener('mousedown', close);
   }, [menu]);
 
-  if (!user) {
+  const address = user?.wallet ?? wallet;
+  if (!address && !user) {
     return (
       <div className="w-full">
         <Button
@@ -98,7 +100,7 @@ function AccountChip() {
     );
   }
 
-  const name = user.username || shortAddr(user.wallet);
+  const name = user?.username || shortAddr(address);
   return (
     <div ref={ref} className="relative w-full">
       <AnimatePresence>
@@ -110,6 +112,14 @@ function AccountChip() {
             transition={{ duration: 0.15 }}
             className="absolute bottom-full left-0 mb-2 w-64 overflow-hidden rounded-2xl bg-ink-950 py-3 shadow-[0_0_15px_rgba(255,255,255,0.15)]"
           >
+            {!user && (
+              <button
+                onClick={() => signIn()}
+                className="flex w-full items-center gap-3 px-4 py-3 text-left text-[15px] font-bold text-ink-50 transition hover:bg-ink-50/[0.04]"
+              >
+                <LogIn className="h-5 w-5" /> Finish sign-in
+              </button>
+            )}
             <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 text-[15px] font-bold text-ink-50 transition hover:bg-ink-50/[0.04]">
               <LayoutGrid className="h-5 w-5" /> Dashboard
             </Link>
@@ -120,7 +130,7 @@ function AccountChip() {
               onClick={() => signOut()}
               className="flex w-full items-center gap-3 px-4 py-3 text-left text-[15px] font-bold text-ink-50 transition hover:bg-ink-50/[0.04]"
             >
-              <LogOut className="h-5 w-5" /> Log out {user.username ? `@${user.username}` : ''}
+              <LogOut className="h-5 w-5" /> {user ? 'Log out' : 'Disconnect'} {user?.username ? `@${user.username}` : ''}
             </button>
           </motion.div>
         )}
@@ -133,7 +143,7 @@ function AccountChip() {
         <span className="hidden min-w-0 flex-1 xl:block">
           <span className="block truncate text-[15px] font-bold leading-5 text-ink-50">{name}</span>
           <span className="block truncate text-[15px] leading-5 text-ink-500">
-            {user.username ? `@${user.username}` : shortAddr(user.wallet, 6)}
+            {user?.username ? `@${user.username}` : user ? shortAddr(address, 6) : signingIn ? 'Signing in…' : 'Not signed in'}
           </span>
         </span>
         <MoreHorizontal className="hidden h-5 w-5 text-ink-50 xl:block" />
@@ -144,7 +154,8 @@ function AccountChip() {
 
 export function Nav() {
   const pathname = usePathname();
-  const { user, signIn, signingIn } = useAuth();
+  const { user, wallet, signIn, signingIn } = useAuth();
+  const address = user?.wallet ?? wallet;
 
   return (
     <>
@@ -192,9 +203,9 @@ export function Nav() {
       {/* ---------- mobile: top bar ---------- */}
       <header className="fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between border-b border-ink-700 bg-ink-950/70 px-4 backdrop-blur-md lg:hidden">
         <div className="w-20">
-          {user && (
+          {address && (
             <Link href="/dashboard" aria-label="Dashboard">
-              <Avatar name={user.username || user.wallet || 'C'} size="sm" />
+              <Avatar name={user?.username || address} size="sm" />
             </Link>
           )}
         </div>
@@ -202,10 +213,19 @@ export function Nav() {
           <img src="/logo.png" alt="" className="h-7 w-7 rounded-lg" />
         </Link>
         <div className="flex w-20 justify-end">
-          {!user && (
+          {!user && !address && (
             <Button size="sm" variant="outline" loading={signingIn} onClick={() => signIn()}>
               Sign in
             </Button>
+          )}
+          {!user && address && (
+            <button
+              onClick={() => signIn()}
+              className="truncate font-mono text-[12px] text-ink-300"
+              title="Finish sign-in"
+            >
+              {shortAddr(address)}
+            </button>
           )}
         </div>
       </header>
