@@ -32,12 +32,12 @@ const EXAMPLES: Pick<Campaign, 'id' | 'title' | 'platforms' | 'ratePerThousand' 
 
 /* Simulated clips for the hero board. Purely illustrative. */
 const SIM = [
-  { handle: '@novaclips', platform: 'tiktok' as Platform, rate: 1.0, speed: 1.0 },
-  { handle: '@reelframe', platform: 'youtube' as Platform, rate: 1.5, speed: 0.7 },
-  { handle: '@fastcuts', platform: 'x' as Platform, rate: 1.2, speed: 0.55 },
-  { handle: '@loopdaily', platform: 'instagram' as Platform, rate: 0.8, speed: 0.85 },
-  { handle: '@cliphaus', platform: 'tiktok' as Platform, rate: 1.1, speed: 1.25 },
-  { handle: '@shortsmith', platform: 'youtube' as Platform, rate: 0.9, speed: 0.6 },
+  { handle: '@example', platform: 'tiktok' as Platform, rate: 1.0, speed: 1.0 },
+  { handle: '@example', platform: 'youtube' as Platform, rate: 1.5, speed: 0.7 },
+  { handle: '@example', platform: 'x' as Platform, rate: 1.2, speed: 0.55 },
+  { handle: '@example', platform: 'instagram' as Platform, rate: 0.8, speed: 0.85 },
+  { handle: '@sidechannelexample', platform: 'tiktok' as Platform, rate: 1.1, speed: 1.25 },
+  { handle: '@sidechannelexample', platform: 'youtube' as Platform, rate: 0.9, speed: 0.6 },
 ];
 const SIM_START = [48210, 126400, 31900, 72300, 18800, 95200];
 
@@ -119,7 +119,7 @@ function SimBoard() {
         {SIM.map((s, i) => {
           const pct = (views[i] % 25000) / 250;
           return (
-            <div key={s.handle} className="flex items-center gap-3 py-3">
+            <div key={i} className="flex items-center gap-3 py-3">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink-900">
                 <PlatformIcon platform={s.platform} className="h-[18px] w-[18px]" />
               </span>
@@ -228,7 +228,7 @@ function ClipJourney() {
                 <div aria-hidden className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_40%,rgba(139,92,246,0.25),transparent)]" />
                 <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-ink-950/70 px-2.5 py-1 backdrop-blur">
                   <PlatformIcon platform="tiktok" className="h-4 w-4" />
-                  <span className="text-[13px] font-bold text-ink-50">@novaclips</span>
+                  <span className="text-[13px] font-bold text-ink-50">@example</span>
                 </div>
                 <AnimatePresence>
                   {verified && (
@@ -392,12 +392,12 @@ export default function Landing() {
 
         {/* campaign ticker, two rows moving opposite ways */}
         <div className="relative space-y-4 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-          <Marquee fast>
+          <Marquee slow>
             {ticker.slice(0, half).concat(ticker.slice(0, half)).map((c, i) => (
               <TickerCard key={c.id + i} c={c} example={!live} />
             ))}
           </Marquee>
-          <Marquee fast reverse>
+          <Marquee slow reverse>
             {ticker.slice(half).concat(ticker.slice(half)).map((c, i) => (
               <TickerCard key={c.id + i} c={c} example={!live} />
             ))}

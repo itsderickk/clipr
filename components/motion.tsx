@@ -148,18 +148,20 @@ export function Marquee({
   children,
   className,
   fast = false,
+  slow = false,
   reverse = false,
 }: {
   children: ReactNode;
   className?: string;
   fast?: boolean;
+  slow?: boolean;
   reverse?: boolean;
 }) {
   return (
     <div className={`marquee-track overflow-hidden ${className || ''}`}>
       <div
         className={`marquee-inner flex w-max items-center gap-0 ${
-          fast ? 'animate-marquee-fast' : 'animate-marquee'
+          fast ? 'animate-marquee-fast' : slow ? 'animate-marquee-slow' : 'animate-marquee'
         } ${reverse ? '[animation-direction:reverse]' : ''}`}
       >
         <div className="flex items-center">{children}</div>
