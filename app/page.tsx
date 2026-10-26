@@ -7,7 +7,6 @@ import {
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
-  useTransform,
 } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, BadgeCheck, ChevronLeft, ChevronRight, Scissors, Wallet } from 'lucide-react';
@@ -62,6 +61,8 @@ const FAQ = [
 /* TikTok's official embed player, muted and looping. Swap the id to feature a different video. */
 const TIKTOK_VIDEO_ID = '7698435898240683295';
 const TIKTOK_EMBED = `https://www.tiktok.com/player/v1/${TIKTOK_VIDEO_ID}?autoplay=1&loop=1&muted=1&controls=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&music_info=0&description=0&rel=0&native_context_menu=0&closed_caption=0`;
+
+const CLIP_LOOP_MS = 12_000;
 
 const STAGES = ['Post the clip.', 'Watch it grow.', 'Get verified.', 'Get paid.'];
 
@@ -167,6 +168,84 @@ function TickerCard({ c, example }: { c: (typeof EXAMPLES)[number]; example?: bo
   return example ? body : <Link href={`/campaigns/${c.id}`}>{body}</Link>;
 }
 
+/** The MrBeast clip going from posted to paid, on a loop. */
+function ClipCard() {
+  const reduce = useReducedMotion();
+  const [p, setP] = useState(1);
+  useEffect(() => {
+    if (reduce) return;
+    const start = Date.now();
+    const t = setInterval(() => setP(((Date.now() - start) % CLIP_LOOP_MS) / CLIP_LOOP_MS), 60);
+    return () => clearInterval(t);
+  }, [reduce]);
+
+  const growth = Math.min(1, Math.max(0, (p - 0.05) / 0.6));
+  const views = Math.round(growth * growth * 184_000);
+  const earned = (views / 1000) * 1.2;
+  const verified = p > 0.55;
+  const paid = p > 0.78;
+
+  return (
+    <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-[18.5rem]">
+      <svg viewBox="0 0 100 100" className="pointer-events-none absolute -inset-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)] -rotate-90" aria-hidden>
+        <circle cx="50" cy="50" r="48" fill="none" stroke="#16181C" strokeWidth="0.6" />
+        <motion.circle cx="50" cy="50" r="48" fill="none" stroke="#A78BFA" strokeWidth="0.6" strokeLinecap="round" animate={{ pathLength: p }} transition={{ duration: 0.1, ease: 'linear' }} />
+      </svg>
+      <motion.div
+        animate={{ scale: paid ? [1, 1.04, 1] : 1 }}
+        transition={{ duration: 0.5 }}
+        className="relative overflow-hidden rounded-3xl border border-ink-800 bg-ink-950"
+      >
+        <div className="relative aspect-[9/16] bg-ink-900">
+          <iframe
+            src={TIKTOK_EMBED}
+            title="MrBeast on TikTok"
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            className="absolute inset-0 h-full w-full border-0"
+          />
+          <div className="pointer-events-none absolute left-4 top-4 flex items-center gap-2 rounded-full bg-ink-950/70 px-2.5 py-1 backdrop-blur">
+            <PlatformIcon platform="tiktok" className="h-4 w-4" />
+            <span className="text-[13px] font-bold text-ink-50">@mrbeast</span>
+          </div>
+          <AnimatePresence>
+            {verified && (
+              <motion.div
+                initial={{ scale: 0, rotate: -30 }}
+                animate={{ scale: 1, rotate: 0 }}
+                exit={{ scale: 0 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 16 }}
+                className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-brand-500 text-white"
+              >
+                <BadgeCheck className="h-5 w-5" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/90 via-ink-950/50 to-transparent p-5 pt-16">
+            <div className="font-display text-4xl font-extrabold tracking-tight text-ink-50 tabular">{views.toLocaleString('en-US')}</div>
+            <div className="mt-1 flex items-center gap-1.5 text-[14px] text-ink-300">
+              <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-brand-400" /> views
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-between border-t border-ink-800 px-5 py-4">
+          <span className="font-display text-2xl font-bold text-ink-50 tabular">${earned.toFixed(2)}</span>
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={paid ? 'paid' : 'pending'}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              className={`rounded-full px-3 py-1 text-[13px] font-bold ${paid ? 'bg-brand-500 text-white' : 'border border-ink-700 text-ink-400'}`}
+            >
+              {paid ? 'Paid' : verified ? 'Verified' : 'Earning'}
+            </motion.span>
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 /** Scroll-driven story: one clip goes from posted to paid as the section scrolls past. */
 function ClipJourney() {
   const ref = useRef<HTMLDivElement>(null);
@@ -175,12 +254,6 @@ function ClipJourney() {
   useMotionValueEvent(scrollYProgress, 'change', (v) => setP(v));
 
   const stage = Math.min(STAGES.length - 1, Math.floor(p * STAGES.length));
-  const growth = Math.min(1, Math.max(0, (p - 0.2) / 0.45));
-  const views = Math.round(growth * growth * 184_000);
-  const earned = (views / 1000) * 1.2;
-  const verified = p > 0.55;
-  const paid = p > 0.78;
-  const ring = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
     <section ref={ref} id="how" className="relative h-[320vh] scroll-mt-0">
@@ -218,64 +291,7 @@ function ClipJourney() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-[18.5rem]">
-            <svg viewBox="0 0 100 100" className="pointer-events-none absolute -inset-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)] -rotate-90" aria-hidden>
-              <circle cx="50" cy="50" r="48" fill="none" stroke="#16181C" strokeWidth="0.6" />
-              <motion.circle cx="50" cy="50" r="48" fill="none" stroke="#A78BFA" strokeWidth="0.6" strokeLinecap="round" style={{ pathLength: ring }} />
-            </svg>
-            <motion.div
-              animate={{ scale: paid ? [1, 1.04, 1] : 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative overflow-hidden rounded-3xl border border-ink-800 bg-ink-950"
-            >
-              <div className="relative aspect-[9/16] bg-ink-900">
-                <iframe
-                  src={TIKTOK_EMBED}
-                  title="MrBeast on TikTok"
-                  loading="lazy"
-                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                  className="absolute inset-0 h-full w-full border-0"
-                />
-                <div className="pointer-events-none absolute left-4 top-4 flex items-center gap-2 rounded-full bg-ink-950/70 px-2.5 py-1 backdrop-blur">
-                  <PlatformIcon platform="tiktok" className="h-4 w-4" />
-                  <span className="text-[13px] font-bold text-ink-50">@mrbeast</span>
-                </div>
-                <AnimatePresence>
-                  {verified && (
-                    <motion.div
-                      initial={{ scale: 0, rotate: -30 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      exit={{ scale: 0 }}
-                      transition={{ type: 'spring', stiffness: 260, damping: 16 }}
-                      className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-brand-500 text-white"
-                    >
-                      <BadgeCheck className="h-5 w-5" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/90 via-ink-950/50 to-transparent p-5 pt-16">
-                  <div className="font-display text-4xl font-extrabold tracking-tight text-ink-50 tabular">{views.toLocaleString('en-US')}</div>
-                  <div className="mt-1 flex items-center gap-1.5 text-[14px] text-ink-300">
-                    <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-brand-400" /> views
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between border-t border-ink-800 px-5 py-4">
-                <span className="font-display text-2xl font-bold text-ink-50 tabular">${earned.toFixed(2)}</span>
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={paid ? 'paid' : 'pending'}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    className={`rounded-full px-3 py-1 text-[13px] font-bold ${paid ? 'bg-brand-500 text-white' : 'border border-ink-700 text-ink-400'}`}
-                  >
-                    {paid ? 'Paid' : verified ? 'Verified' : 'Earning'}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          </div>
+          <SimBoard />
         </div>
       </div>
     </section>
@@ -396,7 +412,7 @@ export default function Landing() {
           </div>
 
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease: EASE }}>
-            <SimBoard />
+            <ClipCard />
           </motion.div>
         </div>
 
