@@ -255,8 +255,7 @@ export default function TokenPage() {
   return (
     <div className="mx-auto min-h-[80vh] max-w-7xl px-5 py-14 sm:px-8">
       <Reveal>
-        <Micro>Token</Micro>
-        <div className="mt-3 flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <img src="/logo.png" alt="" className="h-12 w-12 rounded-xl border border-ink-700" />
           <h1 className="font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
             $CLIPR
@@ -296,8 +295,7 @@ export default function TokenPage() {
       {/* tokenomics */}
       <section className="mt-20">
         <Reveal>
-          <Micro>Tokenomics</Micro>
-          <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-ink-50 sm:text-4xl">
+          <h2 className="max-w-2xl font-display text-3xl font-bold tracking-tight text-ink-50 sm:text-4xl">
             Every payout splits <span className="text-brand-300">90 / 10.</span>
           </h2>
         </Reveal>

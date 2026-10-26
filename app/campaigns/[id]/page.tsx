@@ -262,8 +262,7 @@ export default function CampaignDetail() {
           {/* -------- my submissions -------- */}
           {mine.length > 0 && (
             <Reveal delay={0.2}>
-              <Micro>Your clips on this campaign</Micro>
-              <div className="mt-3 divide-y divide-ink-800 overflow-hidden rounded-xl border border-ink-700">
+              <div className="divide-y divide-ink-800 overflow-hidden rounded-xl border border-ink-700">
                 {mine.map((s) => (
                   <div
                     key={s.id}

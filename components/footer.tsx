@@ -72,11 +72,11 @@ export function Footer() {
                 {col.links.map((l) => (
                   <li key={l.label}>
                     {'external' in l ? (
-                      <a href={l.href} target="_blank" rel="noreferrer" className="text-[15px] text-ink-500 transition hover:text-ink-50">
+                      <a href={l.href} target="_blank" rel="noreferrer" className="text-[15px] text-ink-500 transition hover:text-brand-300">
                         {l.label}
                       </a>
                     ) : (
-                      <Link href={l.href} className="text-[15px] text-ink-500 transition hover:text-ink-50">
+                      <Link href={l.href} className="text-[15px] text-ink-500 transition hover:text-brand-300">
                         {l.label}
                       </Link>
                     )}

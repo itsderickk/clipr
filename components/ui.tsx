@@ -104,7 +104,7 @@ export function Card({
   return (
     <motion.div
       className={`rounded-2xl border border-ink-700 bg-ink-950 ${
-        hover ? 'transition-colors duration-200 hover:bg-ink-900' : ''
+        hover ? 'transition-colors duration-200 hover:border-brand-500/40 hover:bg-ink-900' : ''
       } ${className}`}
     >
       {children}
@@ -127,7 +127,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
     return (
       <input
         ref={ref}
-        className={`h-11 w-full rounded-md border border-ink-700 bg-ink-950 px-4 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-ink-300 focus:ring-1 focus:ring-ink-300 ${className}`}
+        className={`h-11 w-full rounded-md border border-ink-700 bg-ink-950 px-4 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 ${className}`}
         {...rest}
       />
     );
@@ -139,7 +139,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
     return (
       <textarea
         ref={ref}
-        className={`w-full rounded-md border border-ink-700 bg-ink-950 px-4 py-3 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-ink-300 focus:ring-1 focus:ring-ink-300 ${className}`}
+        className={`w-full rounded-md border border-ink-700 bg-ink-950 px-4 py-3 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 ${className}`}
         {...rest}
       />
     );
@@ -153,7 +153,7 @@ export function Progress({ value, className = '' }: { value: number; className?:
   return (
     <div className={`h-1 w-full overflow-hidden rounded-full bg-ink-800 ${className}`}>
       <motion.div
-        className="h-full rounded-full bg-ink-50"
+        className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-300"
         initial={{ width: 0 }}
         whileInView={{ width: `${pct}%` }}
         viewport={{ once: true }}

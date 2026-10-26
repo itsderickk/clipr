@@ -81,8 +81,7 @@ export default function DocsPage() {
   return (
     <div className="mx-auto min-h-[80vh] max-w-7xl px-5 py-14 sm:px-8">
       <Reveal>
-        <Micro>Documentation</Micro>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
+        <h1 className="font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
           How Clipr works
         </h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-300">
@@ -117,8 +116,7 @@ export default function DocsPage() {
         <div className="max-w-3xl">
           {/* 01 overview */}
           <section id="overview" className="scroll-mt-28">
-            <Micro>01 / Overview</Micro>
-            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
+            <h2 className="font-display text-2xl font-bold text-ink-50">
               A settlement layer for clips
             </h2>
             <P>
@@ -137,8 +135,7 @@ export default function DocsPage() {
 
           {/* 02 lifecycle */}
           <section id="lifecycle" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
-            <Micro>02 / The lifecycle</Micro>
-            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
+            <h2 className="font-display text-2xl font-bold text-ink-50">
               Four events, one ledger
             </h2>
             <P>
@@ -156,8 +153,7 @@ export default function DocsPage() {
 
           {/* 03 custody */}
           <section id="escrow" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
-            <Micro>03 / Custody</Micro>
-            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
+            <h2 className="font-display text-2xl font-bold text-ink-50">
               One budget per campaign, Whop as the rails
             </h2>
             <P>
@@ -177,8 +173,7 @@ export default function DocsPage() {
 
           {/* 04 payouts */}
           <section id="payouts" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
-            <Micro>04 / Payouts</Micro>
-            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
+            <h2 className="font-display text-2xl font-bold text-ink-50">
               How a payout is decided
             </h2>
             <P>
@@ -211,8 +206,7 @@ export default function DocsPage() {
 
           {/* 05 roles */}
           <section id="roles" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
-            <Micro>05 / Roles</Micro>
-            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
+            <h2 className="font-display text-2xl font-bold text-ink-50">
               Who can do what
             </h2>
             <div className="mt-5 divide-y divide-ink-800 rounded-xl border border-ink-800">
@@ -242,8 +236,7 @@ export default function DocsPage() {
 
           {/* 06 trust */}
           <section id="trust" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
-            <Micro>06 / Trust model</Micro>
-            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
+            <h2 className="font-display text-2xl font-bold text-ink-50">
               Where the trust actually sits
             </h2>
             <P>
@@ -267,8 +260,7 @@ export default function DocsPage() {
 
           {/* 07 tokenomics */}
           <section id="tokenomics" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
-            <Micro>07 / Fees & tokenomics</Micro>
-            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
+            <h2 className="font-display text-2xl font-bold text-ink-50">
               10% in — 60% back into the chart
             </h2>
             <P>

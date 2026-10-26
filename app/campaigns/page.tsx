@@ -40,8 +40,7 @@ export default function CampaignsPage() {
   return (
     <div className="mx-auto min-h-[70vh] max-w-7xl px-5 py-16 sm:px-8">
       <Reveal>
-        <Micro>Marketplace</Micro>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
+        <h1 className="font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
           Open campaigns
         </h1>
         <p className="mt-3 max-w-lg text-sm leading-relaxed text-ink-400">
