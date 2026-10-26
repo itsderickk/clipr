@@ -1,0 +1,7 @@
+# Extends the default gitleaks rules. The CI workflow uses throwaway values
+# (local Postgres, ci-only JWT/webhook secrets) that aren't real credentials.
+[extend]
+useDefault = true
+
+[allowlist]
+paths = ['''\.github/workflows/ci\.yml''']

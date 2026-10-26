@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import { db } from '@/lib/db';
-import { createSession, sessionCookieOptions, SESSION_COOKIE } from '@/lib/auth';
+import { createSession, jwtSecret as secret, sessionCookieOptions, SESSION_COOKIE } from '@/lib/auth';
 import { appOrigin, exchangeCode, fetchUserInfo } from '@/lib/whop';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const OAUTH_COOKIE = 'clipr_oauth';
-const secret = () => new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret-change-me');
 
 export async function GET(req: NextRequest) {
   const origin = appOrigin(req.url);

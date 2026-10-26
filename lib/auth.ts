@@ -4,7 +4,19 @@ import { db } from './db';
 import type { User } from './types';
 
 export const SESSION_COOKIE = 'cuts_session';
-const secret = () => new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret-change-me');
+/**
+ * Signing key for session + OAuth-state JWTs. The dev fallback is public (it's
+ * in this repo), so production refuses to run without a real JWT_SECRET rather
+ * than silently signing tokens anyone could forge.
+ */
+export function jwtSecret(): Uint8Array {
+  const value = process.env.JWT_SECRET;
+  if (!value && process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET is not set');
+  }
+  return new TextEncoder().encode(value || 'dev-secret-change-me');
+}
+const secret = jwtSecret;
 
 /** Whop user ids (user_...) granted platform-admin powers via env, comma-separated. */
 export function adminWhopIds(): string[] {
