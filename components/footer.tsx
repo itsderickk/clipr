@@ -82,7 +82,7 @@ export function Footer() {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <div className="grid grid-cols-2 gap-x-16 gap-y-3 font-mono text-[11px] uppercase tracking-[0.14em]">
+            <div className="grid grid-cols-2 gap-x-16 gap-y-3 text-[13px] font-medium">
               <Link href="/campaigns" className="text-ink-400 transition hover:text-ink-50">Campaigns</Link>
               <Link href="/dashboard" className="text-ink-400 transition hover:text-ink-50">Dashboard</Link>
               <Link href="/campaigns/new" className="text-ink-400 transition hover:text-ink-50">Launch</Link>
@@ -94,7 +94,7 @@ export function Footer() {
           </Reveal>
         </div>
 
-        <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-ink-800 pt-6 font-mono text-[10px] uppercase tracking-micro text-ink-500">
+        <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-ink-800 pt-6 text-xs font-medium text-ink-500">
           <span className="inline-flex items-center gap-2">
             <SolMark className="h-3 w-3" /> Settled on Solana
           </span>

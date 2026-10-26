@@ -23,7 +23,7 @@ export function CampaignCard({ campaign: c }: { campaign: Campaign }) {
           <Badge status={c.status} pulse={c.status === 'ACTIVE'} />
         </div>
 
-        <h3 className="mt-4 font-display text-lg font-medium leading-snug text-ink-50">
+        <h3 className="mt-4 font-display text-lg font-bold leading-snug text-ink-50">
           {c.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-400">{c.description}</p>
@@ -33,7 +33,7 @@ export function CampaignCard({ campaign: c }: { campaign: Campaign }) {
             <Micro>Rate</Micro>
             <div className="mt-1 flex items-center gap-1.5 font-display text-xl font-semibold text-ink-50">
               <span className="tabular">{fmtUsd(c.ratePerThousand)}</span>
-              <span className="font-mono text-[10px] uppercase tracking-micro text-ink-400">/ 1K views</span>
+              <span className="text-xs font-medium text-ink-400">/ 1K views</span>
             </div>
           </div>
           <div className="text-right">
@@ -44,7 +44,7 @@ export function CampaignCard({ campaign: c }: { campaign: Campaign }) {
 
         <div className="mt-4">
           <Progress value={pct} />
-          <div className="mt-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-micro text-ink-500">
+          <div className="mt-2 flex items-center justify-between text-xs font-medium text-ink-500">
             <span className="inline-flex items-center gap-1">
               <Scissors className="h-3 w-3" /> {c.submissionCount ?? 0} clips
             </span>
@@ -55,7 +55,7 @@ export function CampaignCard({ campaign: c }: { campaign: Campaign }) {
           </div>
         </div>
 
-        <div className="mt-5 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.14em] text-ink-400 transition-colors group-hover:text-ink-50">
+        <div className="mt-5 flex items-center justify-between text-[13px] font-medium text-ink-400 transition-colors group-hover:text-ink-50">
           <span>Open campaign</span>
           <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </div>

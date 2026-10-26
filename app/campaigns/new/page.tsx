@@ -160,14 +160,14 @@ export default function NewCampaign() {
     <div className="mx-auto min-h-[80vh] max-w-3xl px-5 py-14 sm:px-8">
       <Link
         href="/campaigns"
-        className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-400 transition hover:text-ink-50"
+        className="group inline-flex items-center gap-2 text-[13px] font-medium text-ink-400 transition hover:text-ink-50"
       >
         <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" /> Cancel
       </Link>
 
       <div className="mt-8">
         <Micro>New campaign</Micro>
-        <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink-50">
+        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink-50">
           Put a rate on your views
         </h1>
       </div>
@@ -185,7 +185,7 @@ export default function NewCampaign() {
               />
             </div>
             <span
-              className={`font-mono text-[9px] uppercase tracking-micro ${
+              className={`text-[11px] font-medium ${
                 step >= i ? 'text-ink-100' : 'text-ink-500'
               }`}
             >
@@ -269,7 +269,7 @@ export default function NewCampaign() {
                         onClick={() =>
                           setPlatforms((cur) => (on ? cur.filter((x) => x !== p) : [...cur, p]))
                         }
-                        className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.12em] transition-all ${
+                        className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-[13px] font-medium transition-all ${
                           on
                             ? 'border-ink-50 bg-ink-50 text-ink-950'
                             : 'border-ink-600 text-ink-300 hover:border-ink-400'
@@ -349,7 +349,7 @@ export default function NewCampaign() {
             >
               {funded == null ? (
                 <Card hover={false} className="p-7">
-                  <h3 className="font-display text-xl font-medium text-ink-50">Fund the budget</h3>
+                  <h3 className="font-display text-xl font-bold text-ink-50">Fund the budget</h3>
                   <p className="mt-2 text-sm leading-relaxed text-ink-400">
                     Pay through Whop checkout — card, Apple Pay, bank transfer or crypto. The campaign
                     goes live the moment Whop confirms the payment, and you can top up or withdraw
@@ -384,7 +384,7 @@ export default function NewCampaign() {
                   >
                     <CheckCircle2 className="h-8 w-8 text-ink-50" />
                   </motion.div>
-                  <h3 className="mt-6 font-display text-2xl font-semibold text-ink-50">
+                  <h3 className="mt-6 font-display text-2xl font-bold text-ink-50">
                     Campaign is live
                   </h3>
                   <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-ink-400">
@@ -429,7 +429,7 @@ export default function NewCampaign() {
 function ReviewRow({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
   return (
     <div className="flex items-start justify-between gap-6 px-6 py-4">
-      <span className="font-mono text-[10px] uppercase tracking-micro text-ink-400">{k}</span>
+      <span className="text-xs font-medium text-ink-400">{k}</span>
       <span className={`text-right text-sm text-ink-100 ${mono ? 'break-all font-mono text-xs' : ''}`}>
         {v || '—'}
       </span>

@@ -48,7 +48,7 @@ export default function Dashboard() {
         <Reveal>
           <Card hover={false} className="max-w-md p-10 text-center">
             <Wallet className="mx-auto h-7 w-7 text-ink-300" />
-            <h1 className="mt-5 font-display text-2xl font-semibold text-ink-50">
+            <h1 className="mt-5 font-display text-2xl font-bold text-ink-50">
               Your ledger lives here
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-ink-400">
@@ -73,7 +73,7 @@ export default function Dashboard() {
       <Reveal className="flex flex-wrap items-end justify-between gap-6">
         <div>
           <Micro>Dashboard</Micro>
-          <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink-50">
+          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink-50">
             {user.username || shortAddr(user.whopUserId ?? user.wallet, 5)}
           </h1>
         </div>
@@ -82,7 +82,7 @@ export default function Dashboard() {
             href="https://whop.com/"
             target="_blank"
             rel="noreferrer"
-            className="rounded-lg border border-ink-700 bg-ink-900 px-4 py-2.5 font-mono text-[10px] uppercase tracking-micro text-ink-300 transition hover:text-ink-50"
+            className="rounded-lg border border-ink-700 bg-ink-900 px-4 py-2.5 text-xs font-medium text-ink-300 transition hover:text-ink-50"
           >
             Whop balance ↗
           </a>
@@ -100,7 +100,7 @@ export default function Dashboard() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`relative px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] transition ${
+            className={`relative px-5 py-3 text-[13px] font-medium transition ${
               tab === t ? 'text-ink-50' : 'text-ink-500 hover:text-ink-200'
             }`}
           >
@@ -218,7 +218,7 @@ function Earnings() {
                         {s.url.replace(/^https?:\/\//, '')}
                       </a>
                     </div>
-                    <p className="mt-1.5 font-mono text-[10px] uppercase tracking-micro text-ink-500">
+                    <p className="mt-1.5 text-xs font-medium text-ink-500">
                       {s.campaignTitle} · {timeAgo(s.createdAt)}
                       {s.ratePerThousand ? ` · ${fmtUsd(s.ratePerThousand)} / 1K` : ''}
                     </p>
@@ -301,7 +301,7 @@ function AdminReview() {
 
   return (
     <div>
-      <p className="mb-5 font-mono text-[10px] uppercase tracking-micro text-ink-500">
+      <p className="mb-5 text-xs font-medium text-ink-500">
         Admin — every campaign on the platform, pending reviews first. Approve clips and settle
         payouts from each campaign's budget.
       </p>
@@ -424,7 +424,7 @@ function CampaignRow({
       >
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
-            <h3 className="font-display text-lg font-medium text-ink-50">{c.title}</h3>
+            <h3 className="font-display text-lg font-bold text-ink-50">{c.title}</h3>
             <Badge status={c.status} pulse={c.status === 'ACTIVE'} />
             {admin && !isOwner && (
               <span className="rounded-full border border-ink-700 px-2 py-0.5 font-mono text-[10px] text-ink-400">
@@ -437,7 +437,7 @@ function CampaignRow({
               </span>
             )}
           </div>
-          <p className="mt-1.5 font-mono text-[10px] uppercase tracking-micro text-ink-500">
+          <p className="mt-1.5 text-xs font-medium text-ink-500">
             {fmtUsd(c.ratePerThousand)} / 1K · {c.submissionCount ?? 0} clips ·{' '}
             {timeAgo(c.createdAt)}
           </p>
@@ -465,7 +465,7 @@ function CampaignRow({
             <div className="border-t border-ink-800 px-6 py-6">
               <div className="mb-6">
                 <Progress value={c.budgetCents ? (c.spentCents / c.budgetCents) * 100 : 0} />
-                <div className="mt-2 flex justify-between font-mono text-[10px] uppercase tracking-micro text-ink-500">
+                <div className="mt-2 flex justify-between text-xs font-medium text-ink-500">
                   <span>{fmtUsd(c.spentCents)} settled</span>
                   <span>{fmtUsd(c.budgetCents)} deposited</span>
                 </div>
@@ -539,7 +539,7 @@ function CampaignRow({
                                 {s.url.replace(/^https?:\/\//, '')}
                               </a>
                             </div>
-                            <p className="mt-1 font-mono text-[10px] uppercase tracking-micro text-ink-500">
+                            <p className="mt-1 text-xs font-medium text-ink-500">
                               {shortAddr(s.clipperWallet)} · {timeAgo(s.createdAt)} · {fmtNum(s.views)} views
                             </p>
                           </div>
@@ -568,7 +568,7 @@ function CampaignRow({
                                 )}
                                 <button
                                   onClick={() => setReview(s)}
-                                  className="font-mono text-[10px] uppercase tracking-micro text-ink-500 transition hover:text-ink-100"
+                                  className="text-xs font-medium text-ink-500 transition hover:text-ink-100"
                                 >
                                   Edit views
                                 </button>

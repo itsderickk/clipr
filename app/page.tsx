@@ -141,10 +141,10 @@ function StoryCarousel() {
             transition={{ duration: 0.45, ease: EASE }}
             className="relative"
           >
-            <span className="font-mono text-[10px] uppercase tracking-micro text-brand-300">
+            <span className="text-xs font-medium text-brand-300">
               {String(i + 1).padStart(2, '0')} / {s.tag}
             </span>
-            <h3 className="mt-4 max-w-xl font-display text-2xl font-semibold text-ink-50 sm:text-3xl">{s.title}</h3>
+            <h3 className="mt-4 max-w-xl font-display text-2xl font-bold text-ink-50 sm:text-3xl">{s.title}</h3>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink-300 sm:text-base">{s.body}</p>
           </motion.div>
         </AnimatePresence>
@@ -156,7 +156,7 @@ function StoryCarousel() {
             onClick={() => setI(k)}
             aria-label={`Step ${k + 1}: ${st.tag}`}
             className={
-              'rounded-lg border px-3 py-2 font-mono text-[10px] uppercase tracking-micro transition ' +
+              'rounded-lg border px-3 py-2 text-xs font-medium transition ' +
               (k === i ? 'border-brand-400 bg-brand-500/10 text-brand-300' : 'border-ink-700 text-ink-500 hover:text-ink-200')
             }
           >
@@ -184,7 +184,7 @@ function ReceiptRow({ label, delay, children }: { label: string; delay: number; 
       transition={{ duration: 0.4, delay, ease: EASE }}
       className="flex items-baseline justify-between gap-6 py-1.5"
     >
-      <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-500">{label}</span>
+      <span className="text-xs font-medium text-ink-500">{label}</span>
       <span className="truncate text-right font-mono text-xs text-ink-200">{children}</span>
     </motion.div>
   );
@@ -231,10 +231,10 @@ function SettlementReceipt() {
             transition={{ duration: 0.4, ease: EASE }}
           >
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-300">
+              <span className="text-xs font-medium text-ink-300">
                 Clipr — settlement
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
+              <span className="text-xs font-medium text-ink-500">
                 #{r.id} · <span className="text-ink-600">sim</span>
               </span>
             </div>
@@ -256,7 +256,7 @@ function SettlementReceipt() {
               transition={{ duration: 0.4, delay: 0.3, ease: EASE }}
               className="mt-4 flex items-end justify-between"
             >
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-500">Payout</span>
+              <span className="text-xs font-medium text-ink-500">Payout</span>
               <span className="flex flex-col items-end">
                 <span className="inline-flex items-baseline gap-2 font-display text-3xl font-semibold tabular-nums text-ink-50">
                   <AnimatedNumber value={payout} format={(v) => '$' + v.toFixed(2)} />
@@ -264,7 +264,7 @@ function SettlementReceipt() {
               </span>
             </motion.div>
 
-            <div className="mt-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em]">
+            <div className="mt-4 flex items-center justify-between text-xs font-medium">
               <span className="text-ink-500">Status</span>
               {phase === 'verify' ? (
                 <span className="text-ink-300">
@@ -282,7 +282,7 @@ function SettlementReceipt() {
               )}
             </div>
 
-            <div className="mt-1.5 flex h-4 items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-ink-600">
+            <div className="mt-1.5 flex h-4 items-center justify-between text-xs font-medium text-ink-600">
               <span>Tx</span>
               {phase === 'settled' ? (
                 <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{r.tx} ↗</motion.span>
@@ -327,19 +327,19 @@ export default function Landing() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, ease: EASE }}
-                className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-400"
+                className="text-[13px] font-medium text-ink-400"
               >
                 [ Clip-to-earn marketplace · payments by Whop ]
                 <span className="ml-1 inline-block animate-pulse text-brand-300">_</span>
               </motion.p>
 
-              <h1 className="mt-7 font-display font-bold leading-[0.94] tracking-tight">
+              <h1 className="mt-7 font-display font-extrabold leading-[0.94] tracking-tighter">
                 <span className="block overflow-hidden">
                   <motion.span
                     initial={{ y: '110%' }}
                     animate={{ y: 0 }}
                     transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
-                    className="block text-5xl text-ink-50 sm:text-7xl xl:text-8xl"
+                    className="block text-5xl text-ink-50 sm:text-7xl xl:text-[5.25rem] 2xl:text-8xl"
                   >
                     POST A JOB.
                   </motion.span>
@@ -349,7 +349,7 @@ export default function Landing() {
                     initial={{ y: '110%' }}
                     animate={{ y: 0 }}
                     transition={{ duration: 0.8, delay: 0.22, ease: EASE }}
-                    className="block text-5xl text-ink-50 sm:text-7xl xl:text-8xl"
+                    className="block text-5xl text-ink-50 sm:text-7xl xl:text-[5.25rem] 2xl:text-8xl"
                   >
                     MAKE THE CLIP.
                   </motion.span>
@@ -359,7 +359,7 @@ export default function Landing() {
                     initial={{ y: '110%' }}
                     animate={{ y: 0 }}
                     transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
-                    className="text-outline block text-5xl sm:text-7xl xl:text-8xl"
+                    className="block text-5xl text-brand-500 sm:text-7xl xl:text-[5.25rem] 2xl:text-8xl"
                   >
                     GET PAID.
                   </motion.span>
@@ -392,7 +392,7 @@ export default function Landing() {
                 </Magnetic>
                 <Link
                   href="/campaigns/new"
-                  className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-400 transition hover:text-ink-50"
+                  className="group inline-flex items-center gap-2 text-[13px] font-medium text-ink-400 transition hover:text-ink-50"
                 >
                   Launch a campaign
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -412,7 +412,7 @@ export default function Landing() {
       <section className="mx-auto max-w-7xl px-5 py-28 sm:px-8">
         <Reveal>
           <Micro>The cost of attention</Micro>
-          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink-50 sm:text-5xl">
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-50 sm:text-5xl">
             Buy ads, or let the market make clips.
           </h2>
         </Reveal>
@@ -422,24 +422,24 @@ export default function Landing() {
               <Micro>Cost per 1,000</Micro>
               <div className="mt-2 flex items-baseline justify-between">
                 <span className="font-display text-lg text-ink-100">Traditional paid ads</span>
-                <span className="font-mono text-[10px] uppercase tracking-micro text-ink-500">/ pay for impressions</span>
+                <span className="text-xs font-medium text-ink-500">/ pay for impressions</span>
               </div>
               <div className="mt-6 space-y-4">
                 {CPM.map((c) => (
                   <div key={c.platform} className="flex items-end justify-between border-t border-ink-800 pt-4">
                     <div>
                       <div className="font-display text-ink-50">{c.platform}</div>
-                      <div className="font-mono text-[10px] uppercase tracking-micro text-ink-500">{c.note}</div>
+                      <div className="text-xs font-medium text-ink-500">{c.note}</div>
                     </div>
                     <div className="text-right">
                       <div className="font-display text-2xl font-semibold tabular text-ink-200">{c.range}</div>
-                      <div className="font-mono text-[10px] uppercase tracking-micro text-ink-500">/ 1K impressions</div>
+                      <div className="text-xs font-medium text-ink-500">/ 1K impressions</div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="flex items-center justify-center bg-ink-950 px-6 py-4 font-mono text-xs uppercase tracking-micro text-ink-500">
+            <div className="flex items-center justify-center bg-ink-950 px-6 py-4 text-[13px] font-medium text-ink-500">
               VS
             </div>
             <div className="relative overflow-hidden bg-ink-900 p-8">
@@ -447,14 +447,14 @@ export default function Landing() {
               <div className="relative">
                 <div className="flex items-baseline justify-between">
                   <span className="font-display text-lg text-brand-300">Clipr</span>
-                  <span className="font-mono text-[10px] uppercase tracking-micro text-ink-500">/ open market</span>
+                  <span className="text-xs font-medium text-ink-500">/ open market</span>
                 </div>
                 <p className="mt-6 text-sm text-ink-300">Pay for verified views</p>
                 <div className="mt-2 font-display text-6xl font-bold tabular text-ink-50">$0.50–2</div>
-                <span className="mt-3 inline-block rounded-full border border-brand-400 px-3 py-1 font-mono text-[10px] uppercase tracking-micro text-brand-300">
+                <span className="mt-3 inline-block rounded-full border border-brand-400 px-3 py-1 text-xs font-medium text-brand-300">
                   up to 10× less
                 </span>
-                <p className="mt-3 font-mono text-[10px] uppercase tracking-micro text-ink-500">Typical rate / 1K verified views</p>
+                <p className="mt-3 text-xs font-medium text-ink-500">Typical rate / 1K verified views</p>
                 <p className="mt-6 text-sm leading-relaxed text-ink-400">
                   <span className="text-ink-100">Why Clipr can cost less:</span> creators post the rate they’ll pay,
                   and clippers choose which campaigns to make content for. The market decides what gets clipped.
@@ -473,10 +473,10 @@ export default function Landing() {
       <section className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal>
           <Micro>Meet Clipr</Micro>
-          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink-50 sm:text-5xl">
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-50 sm:text-5xl">
             One video. A whole network of creators.
           </h2>
-          <p className="mt-3 font-mono text-[10px] uppercase tracking-micro text-ink-500">The story / 01—05</p>
+          <p className="mt-3 text-xs font-medium text-ink-500">The story / 01—05</p>
         </Reveal>
         <StoryCarousel />
       </section>
@@ -486,7 +486,7 @@ export default function Landing() {
         <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <Micro>The protocol</Micro>
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink-50 sm:text-5xl">
+            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-50 sm:text-5xl">
               Escrow in, clips out,{' '}
               <span className="text-ink-400">views settle the difference.</span>
             </h2>
@@ -531,7 +531,7 @@ export default function Landing() {
                         {e.flag}
                       </span>
                     </div>
-                    <h3 className="mt-2.5 font-display text-xl font-medium text-ink-50">
+                    <h3 className="mt-2.5 font-display text-xl font-bold text-ink-50">
                       {e.title}
                     </h3>
                     <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-ink-400">{e.body}</p>
@@ -551,7 +551,7 @@ export default function Landing() {
         <div className="grid gap-px overflow-hidden rounded-2xl border border-ink-700 bg-ink-700 lg:grid-cols-2">
           <Reveal className="bg-ink-900 p-8 sm:p-12">
             <Micro>For creators</Micro>
-            <h3 className="mt-4 font-display text-2xl font-semibold text-ink-50 sm:text-3xl">
+            <h3 className="mt-4 font-display text-2xl font-bold text-ink-50 sm:text-3xl">
               Buy distribution, not promises.
             </h3>
             <ul className="mt-6 space-y-4">
@@ -577,7 +577,7 @@ export default function Landing() {
             <div className="grid-bg absolute inset-0 opacity-40" />
             <div className="relative">
               <Micro>For clippers</Micro>
-              <h3 className="mt-4 font-display text-2xl font-semibold text-ink-50 sm:text-3xl">
+              <h3 className="mt-4 font-display text-2xl font-bold text-ink-50 sm:text-3xl">
                 Your edits, priced in public.
               </h3>
               <ul className="mt-6 space-y-4">
@@ -604,7 +604,7 @@ export default function Landing() {
       <section className="mx-auto max-w-7xl px-5 py-28 sm:px-8">
         <Reveal>
           <Micro>How money moves</Micro>
-          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink-50 sm:text-5xl">
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-50 sm:text-5xl">
             Anatomy of a payout.
           </h2>
           <p className="mt-5 max-w-xl text-sm leading-relaxed text-ink-400 sm:text-base">
@@ -614,7 +614,7 @@ export default function Landing() {
         </Reveal>
         <Reveal delay={0.08} className="mt-10">
           <div className="overflow-hidden rounded-2xl border border-ink-700">
-            <div className="flex items-center justify-between border-b border-ink-800 bg-ink-900/40 px-6 py-4 font-mono text-[10px] uppercase tracking-micro text-ink-500">
+            <div className="flex items-center justify-between border-b border-ink-800 bg-ink-900/40 px-6 py-4 text-xs font-medium text-ink-500">
               <span>One payout — decomposed</span>
               <span>step · value · why it matters</span>
             </div>
@@ -629,7 +629,7 @@ export default function Landing() {
                 <span className="text-sm leading-relaxed text-ink-400">{row.why}</span>
               </div>
             ))}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-ink-800 bg-ink-900/40 px-6 py-4 font-mono text-[10px] uppercase tracking-micro text-ink-500">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-ink-800 bg-ink-900/40 px-6 py-4 text-xs font-medium text-ink-500">
               <span>Every payout is an auditable Whop transfer</span>
               <span className="text-ink-300">Powered by Whop payments</span>
             </div>
@@ -642,13 +642,13 @@ export default function Landing() {
         <Reveal className="flex items-end justify-between">
           <div>
             <Micro>Live now</Micro>
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink-50 sm:text-4xl">
+            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-50 sm:text-4xl">
               Open campaigns
             </h2>
           </div>
           <Link
             href="/campaigns"
-            className="group hidden items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-400 transition hover:text-ink-50 sm:inline-flex"
+            className="group hidden items-center gap-2 text-[13px] font-medium text-ink-400 transition hover:text-ink-50 sm:inline-flex"
           >
             View all
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -686,7 +686,7 @@ export default function Landing() {
             <div className="grid-bg grid-fade absolute inset-0" />
             <div className="pointer-events-none absolute -top-32 left-1/2 h-64 w-[36rem] -translate-x-1/2 animate-drift rounded-full bg-brand-500/[0.14] blur-3xl" />
             <div className="relative">
-              <h2 className="mx-auto max-w-2xl font-display text-3xl font-semibold tracking-tight text-ink-50 sm:text-5xl">
+              <h2 className="mx-auto max-w-2xl font-display text-3xl font-bold tracking-tight text-ink-50 sm:text-5xl">
                 Every view has a price.
                 <span className="block text-ink-400">Put yours on-chain.</span>
               </h2>
@@ -706,7 +706,7 @@ export default function Landing() {
                   </Link>
                 </Magnetic>
               </div>
-              <p className="mt-8 font-mono text-[10px] uppercase tracking-micro text-ink-500">
+              <p className="mt-8 text-xs font-medium text-ink-500">
                 <ArrowUpRight className="mr-1 inline h-3 w-3" />
                 Running on Solana
               </p>

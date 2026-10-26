@@ -12,7 +12,8 @@ html {
 
 body {
   @apply bg-ink-950 text-ink-50 font-display antialiased;
-  font-feature-settings: 'ss01' on, 'cv01' on;
+  font-feature-settings: 'cv11' on, 'ss01' on;
+  letter-spacing: -0.005em;
 }
 
 ::selection {
@@ -25,15 +26,15 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0416;
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2e1f5e;
-  border: 2px solid #0a0416;
+  background: #2f3336;
+  border: 2px solid #000000;
   border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f2e7a;
+  background: #3e4246;
 }
 
 /* ---------- texture / atmosphere ---------- */
@@ -41,8 +42,8 @@ body {
 
 .grid-bg {
   background-image:
-    linear-gradient(to right, rgba(196, 181, 253, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(196, 181, 253, 0.07) 1px, transparent 1px);
+    linear-gradient(to right, rgba(231, 233, 234, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(231, 233, 234, 0.045) 1px, transparent 1px);
   background-size: 56px 56px;
 }
 
@@ -57,7 +58,7 @@ body {
 
 .text-outline {
   color: transparent;
-  -webkit-text-stroke: 1px #8b6fe0;
+  -webkit-text-stroke: 1px #3e4246;
 }
 
 .tabular {
@@ -65,7 +66,7 @@ body {
 }
 
 .shimmer {
-  background: linear-gradient(100deg, #120a26 40%, #201546 50%, #120a26 60%);
+  background: linear-gradient(100deg, #0a0a0b 40%, #16181c 50%, #0a0a0b 60%);
   background-size: 200% 100%;
   @apply animate-shimmer;
 }
@@ -88,5 +89,5 @@ body {
 }
 
 .horizon-glow {
-  background: radial-gradient(60% 95% at 50% 100%, rgba(139, 92, 246, 0.3), rgba(139, 92, 246, 0) 70%);
+  background: radial-gradient(60% 95% at 50% 100%, rgba(139, 92, 246, 0.16), rgba(139, 92, 246, 0) 70%);
 }

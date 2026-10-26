@@ -20,24 +20,24 @@ export const Button = forwardRef<HTMLButtonElement, BtnProps>(function Button(
   ref
 ) {
   const sizes = {
-    sm: 'h-8 px-3 text-[11px]',
-    md: 'h-10 px-5 text-xs',
-    lg: 'h-12 px-7 text-sm',
+    sm: 'h-8 px-4 text-[13px]',
+    md: 'h-10 px-5 text-[15px]',
+    lg: 'h-12 px-7 text-base',
   };
   const variants = {
     primary:
-      'bg-brand-500 text-white hover:bg-brand-400 hover:shadow-[0_0_32px_rgba(92,124,255,0.4)]',
-    ghost: 'bg-transparent text-ink-200 hover:bg-ink-800 hover:text-ink-50',
+      'bg-brand-500 text-white hover:bg-brand-600',
+    ghost: 'bg-transparent text-ink-50 hover:bg-ink-50/10',
     outline:
-      'border border-ink-600 bg-transparent text-ink-100 hover:border-ink-300 hover:bg-ink-800/60',
+      'border border-ink-600 bg-transparent text-ink-50 hover:bg-ink-50/10',
     danger:
-      'border border-ink-600 bg-transparent text-ink-300 hover:border-ink-300 hover:text-ink-50 hover:bg-ink-800/60',
+      'border border-ink-600 bg-transparent text-ink-50 hover:border-red-500/60 hover:bg-red-500/10 hover:text-red-400',
   };
   return (
     <motion.button
       ref={ref}
       whileTap={{ scale: disabled || loading ? 1 : 0.97 }}
-      className={`group/btn inline-flex select-none items-center justify-center gap-2 rounded-lg font-mono uppercase tracking-[0.12em] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40 ${sizes[size]} ${variants[variant]} ${className}`}
+      className={`group/btn inline-flex select-none items-center justify-center gap-2 rounded-full font-bold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-40 ${sizes[size]} ${variants[variant]} ${className}`}
       disabled={disabled || loading}
       {...(rest as any)}
     >
@@ -54,7 +54,7 @@ export const Button = forwardRef<HTMLButtonElement, BtnProps>(function Button(
 
 export function Micro({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <span className={`font-mono text-[10px] uppercase tracking-micro text-ink-400 ${className}`}>
+    <span className={`text-[13px] font-medium text-ink-500 ${className}`}>
       {children}
     </span>
   );
@@ -63,12 +63,12 @@ export function Micro({ children, className = '' }: { children: ReactNode; class
 /* ---------- status badge ---------- */
 
 const badgeStyles: Record<string, string> = {
-  ACTIVE: 'border-brand-400 text-brand-300',
-  DRAFT: 'border-ink-600 text-ink-400',
-  PAUSED: 'border-ink-600 text-ink-300',
-  COMPLETED: 'border-ink-600 text-ink-400',
-  PENDING: 'border-ink-600 text-ink-300',
-  APPROVED: 'border-brand-400 text-brand-300',
+  ACTIVE: 'border-brand-500/40 bg-brand-500/10 text-brand-300',
+  DRAFT: 'border-ink-700 text-ink-500',
+  PAUSED: 'border-ink-700 text-ink-300',
+  COMPLETED: 'border-ink-700 text-ink-500',
+  PENDING: 'border-ink-700 text-ink-300',
+  APPROVED: 'border-brand-500/40 bg-brand-500/10 text-brand-300',
   REJECTED: 'border-ink-700 text-ink-500',
   PAID: 'bg-brand-500 border-brand-500 text-white',
 };
@@ -76,7 +76,7 @@ const badgeStyles: Record<string, string> = {
 export function Badge({ status, pulse }: { status: string; pulse?: boolean }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize ${
         badgeStyles[status] || 'border-ink-600 text-ink-300'
       }`}
     >
@@ -85,7 +85,7 @@ export function Badge({ status, pulse }: { status: string; pulse?: boolean }) {
           status === 'PAID' ? 'bg-white' : 'bg-current'
         } ${pulse ? 'animate-pulse-dot' : ''}`}
       />
-      {status}
+      {status.toLowerCase()}
     </span>
   );
 }
@@ -103,10 +103,8 @@ export function Card({
 }) {
   return (
     <motion.div
-      whileHover={hover ? { y: -3 } : undefined}
-      transition={{ duration: 0.25, ease: EASE }}
-      className={`rounded-xl border border-ink-700 bg-gradient-to-b from-ink-850 to-ink-900 ${
-        hover ? 'transition-colors duration-300 hover:border-ink-500' : ''
+      className={`rounded-2xl border border-ink-700 bg-ink-950 ${
+        hover ? 'transition-colors duration-200 hover:bg-ink-900' : ''
       } ${className}`}
     >
       {children}
@@ -118,7 +116,7 @@ export function Card({
 
 export function Label({ children }: { children: ReactNode }) {
   return (
-    <label className="mb-2 block font-mono text-[10px] uppercase tracking-micro text-ink-300">
+    <label className="mb-2 block text-[13px] font-medium text-ink-500">
       {children}
     </label>
   );
@@ -129,7 +127,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
     return (
       <input
         ref={ref}
-        className={`h-11 w-full rounded-lg border border-ink-600 bg-ink-900 px-4 text-sm text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-ink-300 focus:shadow-[0_0_0_3px_rgba(237,237,237,0.06)] ${className}`}
+        className={`h-11 w-full rounded-md border border-ink-700 bg-ink-950 px-4 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 ${className}`}
         {...rest}
       />
     );
@@ -141,7 +139,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
     return (
       <textarea
         ref={ref}
-        className={`w-full rounded-lg border border-ink-600 bg-ink-900 px-4 py-3 text-sm text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-ink-300 focus:shadow-[0_0_0_3px_rgba(237,237,237,0.06)] ${className}`}
+        className={`w-full rounded-md border border-ink-700 bg-ink-950 px-4 py-3 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 ${className}`}
         {...rest}
       />
     );
@@ -153,9 +151,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
 export function Progress({ value, className = '' }: { value: number; className?: string }) {
   const pct = Math.max(0, Math.min(100, value));
   return (
-    <div className={`h-1 w-full overflow-hidden rounded-full bg-ink-700 ${className}`}>
+    <div className={`h-1 w-full overflow-hidden rounded-full bg-ink-800 ${className}`}>
       <motion.div
-        className="h-full rounded-full bg-brand-400"
+        className="h-full rounded-full bg-brand-500"
         initial={{ width: 0 }}
         whileInView={{ width: `${pct}%` }}
         viewport={{ once: true }}
@@ -182,7 +180,7 @@ export function CopyChip({ value, label }: { value: string; label?: string }) {
         setCopied(true);
         setTimeout(() => setCopied(false), 1600);
       }}
-      className="inline-flex items-center gap-2 rounded-md border border-ink-600 bg-ink-900 px-2.5 py-1.5 font-mono text-[11px] text-ink-200 transition hover:border-ink-400"
+      className="inline-flex items-center gap-2 rounded-full border border-ink-700 bg-ink-950 px-3 py-1.5 font-mono text-xs text-ink-200 transition hover:bg-ink-900"
       title={value}
     >
       {label || shortAddr(value)}
@@ -216,7 +214,7 @@ export function Modal({
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="absolute inset-0 bg-ink-950/85 backdrop-blur-sm"
+            className="absolute inset-0 bg-[rgba(91,112,131,0.4)]"
             onClick={onClose}
           />
           <motion.div
@@ -224,13 +222,13 @@ export function Modal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.98, transition: { duration: 0.2 } }}
             transition={{ duration: 0.4, ease: EASE }}
-            className={`relative w-full ${wide ? 'max-w-2xl' : 'max-w-md'} rounded-2xl border border-ink-600 bg-ink-900 p-6 shadow-[0_40px_120px_rgba(0,0,0,0.7)]`}
+            className={`relative w-full ${wide ? 'max-w-2xl' : 'max-w-md'} rounded-2xl bg-ink-950 p-6 shadow-[0_0_15px_rgba(255,255,255,0.12)]`}
           >
             <div className="mb-5 flex items-center justify-between">
-              <h3 className="font-display text-lg font-medium text-ink-50">{title}</h3>
+              <h3 className="font-display text-xl font-bold text-ink-50">{title}</h3>
               <button
                 onClick={onClose}
-                className="rounded-md p-1.5 text-ink-400 transition hover:bg-ink-800 hover:text-ink-50"
+                className="rounded-full p-2 text-ink-50 transition hover:bg-ink-50/10"
                 aria-label="Close"
               >
                 <X className="h-4 w-4" />

@@ -41,7 +41,7 @@ export default function CampaignsPage() {
     <div className="mx-auto min-h-[70vh] max-w-7xl px-5 py-16 sm:px-8">
       <Reveal>
         <Micro>Marketplace</Micro>
-        <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink-50 sm:text-5xl">
+        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
           Open campaigns
         </h1>
         <p className="mt-3 max-w-lg text-sm leading-relaxed text-ink-400">
@@ -67,7 +67,7 @@ export default function CampaignsPage() {
             <button
               key={s}
               onClick={() => setSort(s)}
-              className={`relative rounded-md px-3 py-1.5 font-mono text-[10px] uppercase tracking-micro transition ${
+              className={`relative rounded-md px-3 py-1.5 text-xs font-medium transition ${
                 sort === s ? 'text-ink-950' : 'text-ink-400 hover:text-ink-100'
               }`}
             >
@@ -126,7 +126,7 @@ function FilterChip({
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-micro transition-all duration-200 ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all duration-200 ${
         active
           ? 'border-ink-50 bg-ink-50 text-ink-950'
           : 'border-ink-600 text-ink-300 hover:border-ink-400 hover:text-ink-50'
