@@ -5,7 +5,7 @@ import type { User } from './types';
 
 export const SESSION_COOKIE = 'cuts_session';
 /**
- * Signing key for session + OAuth-state JWTs. The dev fallback is public (it's
+ * Signing key for session + sign-in challenge JWTs. The dev fallback is public (it's
  * in this repo), so production refuses to run without a real JWT_SECRET rather
  * than silently signing tokens anyone could forge.
  */
@@ -18,17 +18,17 @@ export function jwtSecret(): Uint8Array {
 }
 const secret = jwtSecret;
 
-/** Whop user ids (user_...) granted platform-admin powers via env, comma-separated. */
-export function adminWhopIds(): string[] {
-  return (process.env.ADMIN_WHOP_USER_IDS || '')
+/** Wallet addresses granted platform-admin powers via env, comma-separated. */
+export function adminWallets(): string[] {
+  return (process.env.ADMIN_WALLETS || '')
     .split(',')
     .map((w) => w.trim())
     .filter(Boolean);
 }
 
-export function whopIdIsEnvAdmin(id: string | null | undefined): boolean {
-  if (!id) return false;
-  return adminWhopIds().includes(id);
+export function walletIsEnvAdmin(wallet: string | null | undefined): boolean {
+  if (!wallet) return false;
+  return adminWallets().includes(wallet);
 }
 
 export async function createSession(userId: string): Promise<string> {
@@ -40,24 +40,27 @@ export async function createSession(userId: string): Promise<string> {
     .sign(secret());
 }
 
+export async function getUserById(id: string): Promise<User | null> {
+  const rows = await db()`
+    select id, wallet, username, is_admin, created_at from users where id = ${id}
+  `;
+  if (!rows[0]) return null;
+  return {
+    id: rows[0].id,
+    wallet: rows[0].wallet,
+    username: rows[0].username,
+    isAdmin: !!rows[0].is_admin || walletIsEnvAdmin(rows[0].wallet),
+    createdAt: rows[0].created_at,
+  };
+}
+
 export async function getUser(): Promise<User | null> {
   const token = cookies().get(SESSION_COOKIE)?.value;
   if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, secret());
     if (!payload.sub) return null;
-    const rows = await db()`
-      select id, wallet, whop_user_id, username, is_admin, created_at from users where id = ${payload.sub}
-    `;
-    if (!rows[0]) return null;
-    return {
-      id: rows[0].id,
-      wallet: rows[0].wallet,
-      whopUserId: rows[0].whop_user_id,
-      username: rows[0].username,
-      isAdmin: !!rows[0].is_admin || whopIdIsEnvAdmin(rows[0].whop_user_id),
-      createdAt: rows[0].created_at,
-    };
+    return await getUserById(payload.sub);
   } catch {
     return null;
   }

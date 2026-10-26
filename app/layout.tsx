@@ -7,7 +7,7 @@ import { Footer } from '@/components/footer';
 export const metadata: Metadata = {
   title: 'Clipr',
   description:
-    'The settlement layer for short-form clips. Creators fund a campaign through Whop, clippers post and earn per 1,000 verified views, payouts land in their Whop balance.',
+    'The settlement layer for short-form clips. Creators fund a campaign escrow wallet, clippers post and earn per 1,000 verified views, payouts land in their wallet.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

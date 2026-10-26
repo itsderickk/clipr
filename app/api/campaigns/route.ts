@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
       const user = await getUser();
       if (!user?.isAdmin) return NextResponse.json({ error: 'Admin only' }, { status: 403 });
       const rows = await db()`
-        select c.*, coalesce(u.whop_user_id, u.wallet) as creator_wallet,
+        select c.*, u.wallet as creator_wallet,
           (select count(*) from submissions s where s.campaign_id = c.id) as submission_count,
           (select count(*) from submissions s where s.campaign_id = c.id and s.status = 'PENDING') as pending_count
         from campaigns c join users u on u.id = c.creator_id
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       const user = await getUser();
       if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
       const rows = await db()`
-        select c.*, coalesce(u.whop_user_id, u.wallet) as creator_wallet,
+        select c.*, u.wallet as creator_wallet,
           (select count(*) from submissions s where s.campaign_id = c.id) as submission_count,
           (select count(*) from submissions s where s.campaign_id = c.id and s.status = 'PENDING') as pending_count
         from campaigns c join users u on u.id = c.creator_id
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
     }
 
     const rows = await db()`
-      select c.*, coalesce(u.whop_user_id, u.wallet) as creator_wallet,
+      select c.*, u.wallet as creator_wallet,
         (select count(*) from submissions s where s.campaign_id = c.id) as submission_count
       from campaigns c join users u on u.id = c.creator_id
       where c.status in ('ACTIVE', 'PAUSED', 'COMPLETED')

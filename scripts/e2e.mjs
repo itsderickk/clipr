@@ -1,19 +1,18 @@
 /**
  * End-to-end test of the Clipr API against a running instance.
- * Users are created straight in the database and given session cookies
- * signed with JWT_SECRET (the Whop OAuth hop is skipped). Covers campaign
- * creation, clip submission, review/approval math, auth boundaries and
- * webhook signature rejection. Whop-touching calls are asserted up to the
- * API boundary.
+ * Covers wallet sign-in (real ed25519 signatures), campaign creation, clip
+ * submission, review/approval math, auth boundaries and the escrow ledger on
+ * the manual rail: deposits, idempotent credits, payout reservations,
+ * concurrent pay clicks, settlement, failure release and refunds.
  *
  *   DATABASE_URL=... JWT_SECRET=... BASE=http://127.0.0.1:3100 node scripts/e2e.mjs
  */
-import { SignJWT } from 'jose';
+import { generateKeyPairSync, sign } from 'crypto';
+import bs58 from 'bs58';
 import pg from 'pg';
 
 const BASE = process.env.BASE || 'http://127.0.0.1:3100';
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret-change-me');
 let passed = 0;
 
 const assert = (cond, msg) => {
@@ -21,14 +20,29 @@ const assert = (cond, msg) => {
   passed++; console.log('ok   -', msg);
 };
 
-async function userCookie(name) {
-  const whopId = `user_e2e${Math.random().toString(36).slice(2, 10)}`;
-  const { rows } = await pool.query(
-    'insert into users (whop_user_id, username) values ($1, $2) returning id', [whopId, name]
-  );
-  const jwt = await new SignJWT({}).setProtectedHeader({ alg: 'HS256' }).setSubject(rows[0].id)
-    .setIssuedAt().setExpirationTime('1h').sign(secret);
-  return { id: rows[0].id, whopId, cookie: `cuts_session=${jwt}` };
+function newWallet() {
+  const { publicKey, privateKey } = generateKeyPairSync('ed25519');
+  const raw = Buffer.from(publicKey.export({ format: 'jwk' }).x, 'base64url');
+  return { address: bs58.encode(raw), sign: (msg) => sign(null, Buffer.from(msg, 'utf8'), privateKey) };
+}
+
+const cookieOf = (res, name) => (res.headers.getSetCookie?.() || []).find((c) => c.startsWith(`${name}=`))?.split(';')[0];
+
+/** Full sign-in: nonce → sign → verify. Returns a user with a session cookie. */
+async function signIn(name) {
+  const w = newWallet();
+  let res = await fetch(`${BASE}/api/auth/nonce?address=${w.address}`);
+  const { message } = await res.json();
+  const challenge = cookieOf(res, 'clipr_siws');
+  res = await fetch(`${BASE}/api/auth/wallet`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', cookie: challenge },
+    body: JSON.stringify({ address: w.address, signature: w.sign(message).toString('base64') }),
+  });
+  const data = await res.json();
+  const session = cookieOf(res, 'cuts_session');
+  if (name) await pool.query('update users set username = $1 where id = $2', [name, data.user?.id]);
+  return { id: data.user?.id, wallet: w.address, cookie: session, status: res.status, w };
 }
 
 async function call(u, path, { method = 'GET', body, headers = {} } = {}) {
@@ -42,13 +56,42 @@ async function call(u, path, { method = 'GET', body, headers = {} } = {}) {
   return { status: res.status, data };
 }
 
-const creator = await userCookie('e2e-creator');
-const clipper = await userCookie('e2e-clipper');
+const campaignRow = async (id) => (await pool.query('select * from campaigns where id=$1', [id])).rows[0];
+
+/* ---------------- sign-in ---------------- */
+
+const creator = await signIn('e2e-creator');
+const clipper = await signIn('e2e-clipper');
+const admin = await signIn('e2e-admin');
+await pool.query('update users set is_admin = true where id = $1', [admin.id]);
+assert(creator.status === 200 && creator.cookie, 'wallet signature starts a session');
 
 let r = await call(creator, '/api/auth/me');
-assert(r.data.user?.whopUserId === creator.whopId, 'session resolves to the Whop user');
+assert(r.data.user?.wallet === creator.wallet, 'session resolves to the signing wallet');
 r = await call(null, '/api/auth/me');
 assert(r.data.user === null, 'no cookie, no user');
+
+{
+  // A signature from a different wallet must not open the session.
+  const victim = newWallet();
+  const attacker = newWallet();
+  let res = await fetch(`${BASE}/api/auth/nonce?address=${victim.address}`);
+  const { message } = await res.json();
+  res = await fetch(`${BASE}/api/auth/wallet`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', cookie: cookieOf(res, 'clipr_siws') },
+    body: JSON.stringify({ address: victim.address, signature: attacker.sign(message).toString('base64') }),
+  });
+  assert(res.status === 401, 'signature from another wallet is rejected');
+  res = await fetch(`${BASE}/api/auth/wallet`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ address: victim.address, signature: victim.sign(message).toString('base64') }),
+  });
+  assert(res.status === 401, 'signature without the issued challenge is rejected');
+}
+
+/* ---------------- campaign ---------------- */
 
 r = await call(null, '/api/campaigns', { method: 'POST', body: { title: 'x' } });
 assert(r.status === 401, 'anonymous cannot create campaigns');
@@ -68,11 +111,25 @@ assert(camp.status === 'DRAFT' && camp.budgetCents === 0, 'new campaign is an un
 r = await call(creator, `/api/campaigns/${camp.id}`, { method: 'PATCH', body: { status: 'ACTIVE' } });
 assert(r.status === 400, 'cannot activate without budget');
 
-r = await call(clipper, `/api/campaigns/${camp.id}/fund`, { method: 'POST', body: { amountCents: 1000 } });
-assert(r.status === 403 || r.status === 503, 'only the creator can fund');
+/* ---------------- escrow: open + fund ---------------- */
 
-// Simulate a credited deposit (the webhook path needs a live Whop payment).
-await pool.query("update campaigns set status='ACTIVE', budget_cents=2000 where id=$1", [camp.id]);
+r = await call(clipper, `/api/campaigns/${camp.id}/fund`, { method: 'POST' });
+assert(r.status === 403, 'only the creator can open the escrow wallet');
+r = await call(creator, `/api/campaigns/${camp.id}/fund`, { method: 'POST' });
+assert(r.status === 200 && r.data.wallet?.rail === 'manual', 'creator opens a manual-rail escrow wallet');
+const again = await call(creator, `/api/campaigns/${camp.id}/fund`, { method: 'POST' });
+assert(JSON.stringify(again.data.wallet) === JSON.stringify(r.data.wallet), 'one wallet per campaign');
+
+r = await call(creator, `/api/campaigns/${camp.id}/escrow/deposits`, { method: 'POST', body: { amountCents: 2000, reference: 'bank-1' } });
+assert(r.status === 403, 'creator cannot self-credit a deposit');
+r = await call(admin, `/api/campaigns/${camp.id}/escrow/deposits`, { method: 'POST', body: { amountCents: 2000, reference: 'bank-1' } });
+assert(r.status === 201 && r.data.entry.status === 'confirmed', 'admin records a $20 deposit');
+r = await call(admin, `/api/campaigns/${camp.id}/escrow/deposits`, { method: 'POST', body: { amountCents: 2000, reference: 'bank-1' } });
+assert(r.status === 200, 'recording the same reference again is a no-op');
+let c = await campaignRow(camp.id);
+assert(Number(c.budget_cents) === 2000 && c.status === 'ACTIVE', 'deposit credited once and campaign activated');
+
+/* ---------------- clips ---------------- */
 
 r = await call(creator, `/api/campaigns/${camp.id}/submissions`, {
   method: 'POST', body: { url: 'https://youtube.com/shorts/abc123', platform: 'youtube' },
@@ -104,27 +161,70 @@ assert(r.status === 200 && r.data.submission.earnedCents === 300, '2,500 views �
 r = await call(creator, `/api/submissions/${sub.id}`, { method: 'PATCH', body: { status: 'APPROVED', views: 100000 } });
 assert(r.data.submission.earnedCents === 500, 'earnings capped at max payout');
 
+/* ---------------- escrow: payouts ---------------- */
+
 r = await call(clipper, `/api/submissions/${sub.id}/pay`, { method: 'POST' });
-assert(r.status === 403 || r.status === 503, 'clipper cannot pay themselves');
+assert(r.status === 403, 'clipper cannot pay themselves');
+
+const clicks = await Promise.all(Array.from({ length: 5 }, () => call(creator, `/api/submissions/${sub.id}/pay`, { method: 'POST' })));
+const ok = clicks.filter((x) => x.status === 200);
+assert(ok.length >= 1 && ok.every((x) => x.data.payout.amountCents === 500), 'pay reserves the $5 owed');
+let { rows: payouts } = await pool.query("select * from ledger_entries where submission_id=$1 and kind='payout'", [sub.id]);
+assert(payouts.length === 1 && payouts[0].status === 'pending', 'five concurrent clicks make exactly one pending payout');
+assert(payouts[0].destination === clipper.wallet, 'payout is addressed to the clipper wallet');
+c = await campaignRow(camp.id);
+assert(Number(c.spent_cents) === 500, 'reservation counts against the budget');
+
+r = await call(creator, `/api/admin/ledger/${payouts[0].id}`, { method: 'PATCH', body: { status: 'confirmed' } });
+assert(r.status === 403, 'creator cannot settle ledger entries');
+r = await call(admin, `/api/admin/ledger/${payouts[0].id}`, { method: 'PATCH', body: { status: 'failed', note: 'bounced' } });
+assert(r.data.entry?.status === 'failed', 'admin marks the payout failed');
+c = await campaignRow(camp.id);
+let s = (await pool.query('select paid_cents from submissions where id=$1', [sub.id])).rows[0];
+assert(Number(c.spent_cents) === 0 && Number(s.paid_cents) === 0, 'failure releases the reservation');
+
+r = await call(creator, `/api/submissions/${sub.id}/pay`, { method: 'POST' });
+assert(r.status === 200 && r.data.payout.status === 'pending', 'a failed payout can be retried');
+({ rows: payouts } = await pool.query("select * from ledger_entries where submission_id=$1 and kind='payout' and status='pending'", [sub.id]));
+r = await call(admin, `/api/admin/ledger/${payouts[0].id}`, { method: 'PATCH', body: { status: 'confirmed', reference: 'wire-42' } });
+assert(r.data.entry?.status === 'confirmed' && r.data.entry.externalRef === 'wire-42', 'admin confirms with a reference');
+r = await call(admin, `/api/admin/ledger/${payouts[0].id}`, { method: 'PATCH', body: { status: 'failed' } });
+assert(r.data.entry?.status === 'confirmed', 'a settled entry cannot be flipped');
+
+r = await call(creator, `/api/submissions/${sub.id}/pay`, { method: 'POST' });
+assert(r.status === 400, 'nothing owed after the payout');
+
+/* ---------------- escrow: refund ---------------- */
 
 r = await call(clipper, `/api/campaigns/${camp.id}/withdraw`, { method: 'POST' });
-assert(r.status === 403 || r.status === 503, 'only the creator can withdraw');
+assert(r.status === 403, 'only the creator can withdraw');
+r = await call(creator, `/api/campaigns/${camp.id}/withdraw`, { method: 'POST' });
+assert(r.status === 200 && r.data.amountCents === 1500, 'creator withdraws the $15 left');
+c = await campaignRow(camp.id);
+assert(c.status === 'COMPLETED' && Number(c.budget_cents) - Number(c.spent_cents) === 0, 'campaign closed with nothing left');
 
-r = await call(null, '/api/webhooks/whop', {
-  method: 'POST',
-  body: JSON.stringify({ type: 'payment.succeeded', data: { id: 'pay_fake', metadata: { kind: 'campaign_fund', campaign_id: camp.id } } }),
-  headers: { 'content-type': 'application/json', 'webhook-id': 'msg_1', 'webhook-timestamp': String(Math.floor(Date.now() / 1000)), 'webhook-signature': 'v1,AAAA' },
-});
-assert(r.status === 401, 'unsigned webhook rejected');
-const { rows } = await pool.query('select budget_cents from campaigns where id=$1', [camp.id]);
-assert(Number(rows[0].budget_cents) === 2000, 'forged webhook did not credit budget');
+/* ---------------- audit ---------------- */
+
+r = await call(null, `/api/campaigns/${camp.id}/escrow`);
+assert(r.status === 200 && r.data.entries.length === 4, 'public ledger lists deposit, two payouts and the refund');
+assert(r.data.balance.availableCents === 0 && r.data.balance.fundedCents === 500, 'public balance matches');
+const { rows: events } = await pool.query(
+  'select count(*)::int as n from ledger_events where entry_id in (select id from ledger_entries where campaign_id=$1)', [camp.id]);
+assert(events[0].n === 6, 'every status change is in the audit trail');
+const { rows: sum } = await pool.query(`
+  select coalesce(sum(case when kind='deposit' then amount_cents else -amount_cents end), 0)::int as bal
+  from ledger_entries where campaign_id=$1 and status <> 'failed'`, [camp.id]);
+assert(sum[0].bal === Number(c.budget_cents) - Number(c.spent_cents), 'ledger sum equals cached campaign balance');
 
 r = await call(clipper, '/api/submissions/mine');
-assert(r.data.submissions?.some((s) => s.id === sub.id), 'clipper sees their clip');
+assert(r.data.submissions?.some((x) => x.id === sub.id), 'clipper sees their clip');
 
 // cleanup
+await pool.query('delete from ledger_events where entry_id in (select id from ledger_entries where campaign_id=$1)', [camp.id]);
+await pool.query('delete from ledger_entries where campaign_id=$1', [camp.id]);
+await pool.query('delete from escrow_wallets where campaign_id=$1', [camp.id]);
 await pool.query('delete from submissions where campaign_id=$1', [camp.id]);
 await pool.query('delete from campaigns where id=$1', [camp.id]);
-await pool.query('delete from users where id = any($1)', [[creator.id, clipper.id]]);
+await pool.query('delete from users where id = any($1)', [[creator.id, clipper.id, admin.id]]);
 await pool.end();
 console.log(`\n${passed} checks passed`);

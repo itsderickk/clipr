@@ -25,7 +25,6 @@ const COLUMNS = [
     title: 'Resources',
     links: [
       { href: 'https://github.com/lyftical/clipr', label: 'GitHub', external: true },
-      { href: 'https://whop.com', label: 'Whop', external: true },
     ],
   },
 ];
@@ -89,7 +88,7 @@ export function Footer() {
 
         <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-ink-800 pt-6 text-[13px] text-ink-600">
           <span>© 2026 Clipr</span>
-          <span>Payments by Whop · Not affiliated with X Corp.</span>
+          <span>Settled in USDC on Solana · Not affiliated with X Corp.</span>
         </div>
       </div>
     </footer>

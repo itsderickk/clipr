@@ -20,7 +20,6 @@ jobs:
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/clipr
       JWT_SECRET: ci-only-secret
-      WHOP_WEBHOOK_SECRET: whsec_Y2ktb25seQ==
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
