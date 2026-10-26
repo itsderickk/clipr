@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: clipr
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/clipr
+      JWT_SECRET: ci-only-secret
+      WHOP_WEBHOOK_SECRET: whsec_Y2ktb25seQ==
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: psql "$DATABASE_URL" -f db/schema.sql
+      - run: npm run build
+      - run: |
+          npx next start -p 3100 &
+          npx wait-on http://127.0.0.1:3100 -t 60000
+          BASE=http://127.0.0.1:3100 node scripts/e2e.mjs

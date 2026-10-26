@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-ink-950 text-ink-50 font-display antialiased;
+  font-feature-settings: 'ss01' on, 'cv01' on;
+}
+
+::selection {
+  background: #8b5cf6;
+  color: #f8f6fe;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0416;
+}
+::-webkit-scrollbar-thumb {
+  background: #2e1f5e;
+  border: 2px solid #0a0416;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f2e7a;
+}
+
+/* ---------- texture / atmosphere ---------- */
+
+
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(196, 181, 253, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(196, 181, 253, 0.07) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.grid-fade {
+  -webkit-mask-image: radial-gradient(ellipse 80% 65% at 50% 35%, black 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 65% at 50% 35%, black 35%, transparent 100%);
+}
+
+.hairline {
+  @apply border border-ink-700;
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px #8b6fe0;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.shimmer {
+  background: linear-gradient(100deg, #120a26 40%, #201546 50%, #120a26 60%);
+  background-size: 200% 100%;
+  @apply animate-shimmer;
+}
+
+.marquee-track:hover .marquee-inner {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.horizon-glow {
+  background: radial-gradient(60% 95% at 50% 100%, rgba(139, 92, 246, 0.3), rgba(139, 92, 246, 0) 70%);
+}
