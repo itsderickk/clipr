@@ -59,6 +59,10 @@ const FAQ = [
   { q: 'Can creators get unspent budget back?', a: 'Yes. Remaining budget can be withdrawn from the campaign at any time.' },
 ];
 
+/* TikTok's official embed player, muted and looping. Swap the id to feature a different video. */
+const TIKTOK_VIDEO_ID = '7698435898240683295';
+const TIKTOK_EMBED = `https://www.tiktok.com/player/v1/${TIKTOK_VIDEO_ID}?autoplay=1&loop=1&muted=1&controls=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&music_info=0&description=0&rel=0&native_context_menu=0&closed_caption=0`;
+
 const STAGES = ['Post the clip.', 'Watch it grow.', 'Get verified.', 'Get paid.'];
 
 /* ---------------- hooks ---------------- */
@@ -214,7 +218,7 @@ function ClipJourney() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-sm">
+          <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-[18.5rem]">
             <svg viewBox="0 0 100 100" className="pointer-events-none absolute -inset-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)] -rotate-90" aria-hidden>
               <circle cx="50" cy="50" r="48" fill="none" stroke="#16181C" strokeWidth="0.6" />
               <motion.circle cx="50" cy="50" r="48" fill="none" stroke="#A78BFA" strokeWidth="0.6" strokeLinecap="round" style={{ pathLength: ring }} />
@@ -224,11 +228,17 @@ function ClipJourney() {
               transition={{ duration: 0.5 }}
               className="relative overflow-hidden rounded-3xl border border-ink-800 bg-ink-950"
             >
-              <div className="relative aspect-[4/5] bg-gradient-to-br from-ink-800 via-ink-900 to-ink-950">
-                <div aria-hidden className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_40%,rgba(139,92,246,0.25),transparent)]" />
-                <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-ink-950/70 px-2.5 py-1 backdrop-blur">
+              <div className="relative aspect-[9/16] bg-ink-900">
+                <iframe
+                  src={TIKTOK_EMBED}
+                  title="MrBeast on TikTok"
+                  loading="lazy"
+                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                  className="absolute inset-0 h-full w-full border-0"
+                />
+                <div className="pointer-events-none absolute left-4 top-4 flex items-center gap-2 rounded-full bg-ink-950/70 px-2.5 py-1 backdrop-blur">
                   <PlatformIcon platform="tiktok" className="h-4 w-4" />
-                  <span className="text-[13px] font-bold text-ink-50">@example</span>
+                  <span className="text-[13px] font-bold text-ink-50">@mrbeast</span>
                 </div>
                 <AnimatePresence>
                   {verified && (
@@ -243,8 +253,8 @@ function ClipJourney() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <div className="font-display text-5xl font-extrabold tracking-tight text-ink-50 tabular">{views.toLocaleString('en-US')}</div>
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/90 via-ink-950/50 to-transparent p-5 pt-16">
+                  <div className="font-display text-4xl font-extrabold tracking-tight text-ink-50 tabular">{views.toLocaleString('en-US')}</div>
                   <div className="mt-1 flex items-center gap-1.5 text-[14px] text-ink-300">
                     <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-brand-400" /> views
                   </div>
