@@ -22,13 +22,13 @@ type Activity = { kind: 'payout' | 'deposit' | 'campaign' | 'clip'; amount: numb
 
 /* Shown in the ticker only until real campaigns exist. */
 const EXAMPLES: Pick<Campaign, 'id' | 'title' | 'platforms' | 'ratePerThousand' | 'budgetCents' | 'spentCents'>[] = [
-  { id: 'ex1', title: 'Podcast — Founder Interviews', platforms: ['tiktok'], ratePerThousand: 100, budgetCents: 50000, spentCents: 12400 },
-  { id: 'ex2', title: 'Keynote — Launch Moments', platforms: ['youtube'], ratePerThousand: 150, budgetCents: 120000, spentCents: 30100 },
-  { id: 'ex3', title: 'Tournament — Highlight Run', platforms: ['instagram'], ratePerThousand: 80, budgetCents: 25000, spentCents: 4200 },
-  { id: 'ex4', title: 'Stream — Best Reactions', platforms: ['x'], ratePerThousand: 120, budgetCents: 60000, spentCents: 21800 },
-  { id: 'ex5', title: 'Album — Studio Sessions', platforms: ['tiktok'], ratePerThousand: 200, budgetCents: 200000, spentCents: 51000 },
-  { id: 'ex6', title: 'Course — Best Lessons', platforms: ['youtube'], ratePerThousand: 90, budgetCents: 40000, spentCents: 9000 },
+  { id: 'ex1', title: 'Clipr — TikTok launch clips', platforms: ['tiktok'], ratePerThousand: 100, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex2', title: 'Clipr — YouTube Shorts explainers', platforms: ['youtube'], ratePerThousand: 150, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex3', title: 'Clipr — Instagram Reels', platforms: ['instagram'], ratePerThousand: 80, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex4', title: 'Clipr — Posts on X', platforms: ['x'], ratePerThousand: 120, budgetCents: 125000, spentCents: 0 },
 ];
+/* $5,000 across the four Clipr campaigns; shown as the live budget until real stats exist. */
+const EXAMPLE_BUDGET_CENTS = EXAMPLES.reduce((t, c) => t + c.budgetCents - c.spentCents, 0);
 
 /* Simulated clips for the hero board. Purely illustrative. */
 const SIM = [
@@ -326,7 +326,7 @@ export default function Landing() {
 
   const statItems = [
     { label: 'Paid to clippers', value: stats?.totalPaidCents ?? 0, fmt: (v: number) => fmtUsd(Math.round(v)) },
-    { label: 'Live budgets', value: stats?.escrowedCents ?? 0, fmt: (v: number) => fmtUsd(Math.round(v)) },
+    { label: 'Live budgets', value: stats?.escrowedCents || EXAMPLE_BUDGET_CENTS, fmt: (v: number) => fmtUsd(Math.round(v)) },
     { label: 'Clips submitted', value: stats?.totalClips ?? 0 },
     { label: 'Verified views', value: stats?.totalViews ?? 0, fmt: (v: number) => fmtNum(Math.round(v)) },
   ];

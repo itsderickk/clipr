@@ -1,68 +1,80 @@
 /**
- * Seeds a demo creator + three demo campaigns so the marketplace isn't empty.
- * The demo creator's wallet is a placeholder nobody holds a key for, so nobody
+ * Seeds a Clipr creator + one campaign per platform (TikTok, YouTube, Instagram, X),
+ * each asking clippers to post about Clipr itself. The creator's wallet is a placeholder nobody holds a key for, so nobody
  * can sign in as it, and its campaigns have no escrow wallet — their budgets
  * are display-only.
  *
  *   DATABASE_URL=postgresql://... node scripts/seed.mjs
  *
- * Idempotent: exits if a 'demo-creator' user already exists.
+ * Idempotent: exits if a 'clipr' user already exists.
  * To remove the demo rows later, run the reset block in db/seed.sql.
  */
 import pg from 'pg';
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
-// Money is integer cents; rate is cents per 1,000 views.
+// Money is integer cents; rate is cents per 1,000 views. Four campaigns × $1,250 = $5,000 live budget.
 const CAMPAIGNS = [
   {
-    title: 'Clip our AI keynote',
+    title: 'Clipr — TikTok launch clips',
     description:
-      'Demo campaign. Cut the strongest moments from the keynote: reveals, live demos, crowd reactions. Hooks in the first 2 seconds, captions on, vertical crop.',
-    source: 'https://youtube.com/@example',
-    platforms: '{tiktok,youtube}',
-    rate: 120,
-    budget: 50000,
+      'Make short TikToks about Clipr: creators fund a campaign, clippers post, and every verified 1,000 views pays out. Show the dashboard or a payout moment in the first 3 seconds.',
+    source: 'https://github.com/itsderickk/clipr',
+    platforms: '{tiktok}',
+    rate: 100,
+    budget: 125000,
     minViews: 1000,
     cap: 25000,
-    reqs: 'Vertical 9:16 · burned-in captions · official footage only',
+    reqs: 'Vertical 9:16 · captions on · tag @clipr',
   },
   {
-    title: 'Podcast highlights — ep. 42',
+    title: 'Clipr — YouTube Shorts explainers',
     description:
-      'Demo campaign. Pull the 30–60s moments that make people want the full episode. Speaker labels and captions required.',
-    source: 'https://youtube.com/@example',
-    platforms: '{tiktok,instagram,youtube}',
+      'Explain Clipr in under 60 seconds on YouTube Shorts: how campaigns are funded, how views are verified, and how clippers get paid in USDC.',
+    source: 'https://github.com/itsderickk/clipr',
+    platforms: '{youtube}',
+    rate: 150,
+    budget: 125000,
+    minViews: 1000,
+    cap: 25000,
+    reqs: 'Vertical 9:16 · under 60s · link clipr in the description',
+  },
+  {
+    title: 'Clipr — Instagram Reels',
+    description:
+      'Reels about clipping for Clipr campaigns: a day of clipping, first payout, or picking a campaign. Keep it fast and caption every line.',
+    source: 'https://github.com/itsderickk/clipr',
+    platforms: '{instagram}',
     rate: 80,
-    budget: 120000,
-    minViews: 500,
-    cap: null,
-    reqs: 'Captions on · tag the show · no full-episode re-uploads',
+    budget: 125000,
+    minViews: 1000,
+    cap: 25000,
+    reqs: 'Vertical 9:16 · captions on · tag @clipr',
   },
   {
-    title: 'Launch-day stream, best-ofs',
+    title: 'Clipr — Posts on X',
     description:
-      'Demo campaign. Best plays, chat reactions and launch moments from the stream VOD. Meme edits welcome if the moment stays visible.',
-    source: 'https://twitch.tv/example',
-    platforms: '{x,tiktok}',
-    rate: 250,
-    budget: 30000,
-    minViews: 2500,
-    cap: 50000,
-    reqs: '15–45s · credit the streamer · CTA in caption',
+      'Post clips or short videos on X that show what Clipr is and why clippers use it. Threads with an attached clip count if the clip is yours.',
+    source: 'https://github.com/itsderickk/clipr',
+    platforms: '{x}',
+    rate: 120,
+    budget: 125000,
+    minViews: 1000,
+    cap: 25000,
+    reqs: 'Native video · mention @clipr · no reposted footage',
   },
 ];
 
 const client = await pool.connect();
 try {
-  const existing = await client.query("select id from users where username = 'demo-creator' limit 1");
+  const existing = await client.query("select id from users where username = 'clipr' limit 1");
   if (existing.rows.length) {
     console.log('Demo data already present — nothing to do.');
     process.exit(0);
   }
   await client.query('begin');
   const { rows } = await client.query(
-    "insert into users (wallet, username) values ('C1iprDemoSeedCreator11111111111111111111111', 'demo-creator') returning id"
+    "insert into users (wallet, username) values ('C1iprCampaignSeedCreator1111111111111111111', 'clipr') returning id"
   );
   const creatorId = rows[0].id;
   for (const c of CAMPAIGNS) {
@@ -75,7 +87,7 @@ try {
     );
   }
   await client.query('commit');
-  console.log(`Seeded demo creator + ${CAMPAIGNS.length} campaigns.`);
+  console.log(`Seeded Clipr creator + ${CAMPAIGNS.length} campaigns.`);
 } catch (e) {
   await client.query('rollback');
   console.error(e);
