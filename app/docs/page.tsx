@@ -26,7 +26,7 @@ function SplitBar({
           />
         ))}
       </div>
-      <div className="mt-2.5 flex flex-wrap justify-between gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-micro">
+      <div className="mt-2.5 flex flex-wrap justify-between gap-x-4 gap-y-1 text-xs font-medium">
         {segments.map((s) => (
           <span key={s.label} className={s.text}>
             {s.label}
@@ -82,7 +82,7 @@ export default function DocsPage() {
     <div className="mx-auto min-h-[80vh] max-w-7xl px-5 py-14 sm:px-8">
       <Reveal>
         <Micro>Documentation</Micro>
-        <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink-50 sm:text-5xl">
+        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
           How Clipr works
         </h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-300">
@@ -100,9 +100,9 @@ export default function DocsPage() {
                 key={s.id}
                 href={'#' + s.id}
                 className={
-                  '-ml-px flex items-baseline gap-2.5 border-l py-1.5 pl-4 font-mono text-[11px] uppercase tracking-[0.12em] transition ' +
+                  '-ml-px flex items-baseline gap-2.5 border-l py-1.5 pl-4 text-[13px] font-medium transition ' +
                   (active === s.id
-                    ? 'border-brand-400 text-ink-50'
+                    ? 'border-ink-50 text-ink-50'
                     : 'border-transparent text-ink-500 hover:text-ink-200')
                 }
               >
@@ -118,7 +118,7 @@ export default function DocsPage() {
           {/* 01 overview */}
           <section id="overview" className="scroll-mt-28">
             <Micro>01 / Overview</Micro>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-ink-50">
+            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
               A settlement layer for clips
             </h2>
             <P>
@@ -138,7 +138,7 @@ export default function DocsPage() {
           {/* 02 lifecycle */}
           <section id="lifecycle" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
             <Micro>02 / The lifecycle</Micro>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-ink-50">
+            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
               Four events, one ledger
             </h2>
             <P>
@@ -157,7 +157,7 @@ export default function DocsPage() {
           {/* 03 custody */}
           <section id="escrow" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
             <Micro>03 / Custody</Micro>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-ink-50">
+            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
               One budget per campaign, Whop as the rails
             </h2>
             <P>
@@ -178,7 +178,7 @@ export default function DocsPage() {
           {/* 04 payouts */}
           <section id="payouts" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
             <Micro>04 / Payouts</Micro>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-ink-50">
+            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
               How a payout is decided
             </h2>
             <P>
@@ -212,7 +212,7 @@ export default function DocsPage() {
           {/* 05 roles */}
           <section id="roles" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
             <Micro>05 / Roles</Micro>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-ink-50">
+            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
               Who can do what
             </h2>
             <div className="mt-5 divide-y divide-ink-800 rounded-xl border border-ink-800">
@@ -231,7 +231,7 @@ export default function DocsPage() {
                 },
               ].map((r) => (
                 <div key={r.role} className="grid gap-2 px-5 py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-brand-300">
+                  <span className="text-[13px] font-medium text-brand-300">
                     {r.role}
                   </span>
                   <p className="text-sm leading-relaxed text-ink-300">{r.body}</p>
@@ -243,7 +243,7 @@ export default function DocsPage() {
           {/* 06 trust */}
           <section id="trust" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
             <Micro>06 / Trust model</Micro>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-ink-50">
+            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
               Where the trust actually sits
             </h2>
             <P>
@@ -268,7 +268,7 @@ export default function DocsPage() {
           {/* 07 tokenomics */}
           <section id="tokenomics" className="mt-12 scroll-mt-28 border-t border-ink-800 pt-12">
             <Micro>07 / Fees & tokenomics</Micro>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-ink-50">
+            <h2 className="mt-3 font-display text-2xl font-bold text-ink-50">
               10% in — 60% back into the chart
             </h2>
             <P>
@@ -280,14 +280,14 @@ export default function DocsPage() {
             <div className="mt-6 space-y-7">
               <SplitBar
                 segments={[
-                  { label: 'Clippers · 90%', pct: 90, bar: 'bg-brand-500', text: 'text-brand-300' },
+                  { label: 'Clippers · 90%', pct: 90, bar: 'bg-ink-50', text: 'text-ink-50' },
                   { label: 'Protocol · 10%', pct: 10, bar: 'bg-ink-50', text: 'text-ink-200' },
                 ]}
               />
               <SplitBar
                 segments={[
-                  { label: '$CLIPR buybacks · 60%', pct: 60, bar: 'bg-brand-500', text: 'text-brand-300' },
-                  { label: 'Clipr campaigns · 30%', pct: 30, bar: 'bg-brand-300', text: 'text-brand-400' },
+                  { label: '$CLIPR buybacks · 60%', pct: 60, bar: 'bg-ink-50', text: 'text-ink-50' },
+                  { label: 'Clipr campaigns · 30%', pct: 30, bar: 'bg-ink-400', text: 'text-ink-300' },
                   { label: 'Operations · 10%', pct: 10, bar: 'bg-ink-50', text: 'text-ink-200' },
                 ]}
               />

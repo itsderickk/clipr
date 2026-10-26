@@ -217,7 +217,7 @@ export function Spotlight({ className }: { className?: string }) {
   const bg = useTransform(
     [sx, sy],
     ([a, b]) =>
-      `radial-gradient(560px circle at ${a}px ${b}px, rgba(92,124,255,0.1), transparent 65%)`
+      `radial-gradient(560px circle at ${a}px ${b}px, rgba(139,92,246,0.08), transparent 65%)`
   );
 
   const ref = useRef<HTMLDivElement>(null);

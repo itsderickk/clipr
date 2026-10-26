@@ -68,7 +68,7 @@ function PriceChart() {
               {pendingSol ? 'SOL' : '$CLIPR'}
             </span>
             {pendingSol && (
-              <span className="rounded-full border border-ink-700 px-2 py-0.5 font-mono text-[10px] uppercase tracking-micro text-ink-400">
+              <span className="rounded-full border border-ink-700 px-2 py-0.5 text-xs font-medium text-ink-400">
                 $CLIPR listing pending · charting SOL
               </span>
             )}
@@ -96,8 +96,8 @@ function PriceChart() {
             <button
               key={r}
               onClick={() => setDays(r)}
-              className={`rounded-md px-3 py-1.5 font-mono text-[10px] uppercase tracking-micro transition ${
-                days === r ? 'bg-brand-500 text-white' : 'text-ink-400 hover:bg-ink-800 hover:text-ink-100'
+              className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                days === r ? 'bg-ink-50 text-ink-950' : 'text-ink-400 hover:bg-ink-800 hover:text-ink-100'
               }`}
             >
               {r === 365 ? '1Y' : r + 'D'}
@@ -109,7 +109,7 @@ function PriceChart() {
       <div className="relative px-2 pb-2 pt-4">
         {data === null && <Skeleton className="mx-4 h-[260px]" />}
         {data === 'error' && (
-          <div className="mx-4 flex h-[260px] items-center justify-center rounded-xl border border-dashed border-ink-700 font-mono text-[11px] uppercase tracking-micro text-ink-500">
+          <div className="mx-4 flex h-[260px] items-center justify-center rounded-xl border border-dashed border-ink-700 text-[13px] font-medium text-ink-500">
             CoinGecko unreachable — try again shortly
           </div>
         )}
@@ -177,7 +177,7 @@ function PriceChart() {
             )}
           </div>
         )}
-        <div className="flex items-center justify-between px-4 pb-2 pt-1 font-mono text-[10px] uppercase tracking-micro text-ink-500">
+        <div className="flex items-center justify-between px-4 pb-2 pt-1 text-xs font-medium text-ink-500">
           <span>
             {pts.length
               ? new Date(pts[0].t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
@@ -214,7 +214,7 @@ function SplitCalculator() {
   const rows = [
     { k: 'Gross payout', v: gross, cls: 'text-ink-200' },
     { k: 'Protocol · 10%', v: fee, cls: 'text-ink-400' },
-    { k: 'Clipper receives', v: net, cls: 'text-brand-300', strong: true },
+    { k: 'Clipper receives', v: net, cls: 'text-ink-50', strong: true },
   ];
 
   return (
@@ -233,7 +233,7 @@ function SplitCalculator() {
       <div className="mt-6 divide-y divide-ink-800 rounded-xl border border-ink-800">
         {rows.map((r) => (
           <div key={r.k} className="flex items-center justify-between px-4 py-3.5">
-            <span className="font-mono text-[10px] uppercase tracking-micro text-ink-500">{r.k}</span>
+            <span className="text-xs font-medium text-ink-500">{r.k}</span>
             <motion.span
               key={r.v}
               initial={{ opacity: 0, y: 4 }}
@@ -258,7 +258,7 @@ export default function TokenPage() {
         <Micro>Token</Micro>
         <div className="mt-3 flex items-center gap-4">
           <img src="/logo.png" alt="" className="h-12 w-12 rounded-xl border border-ink-700" />
-          <h1 className="font-display text-4xl font-semibold tracking-tight text-ink-50 sm:text-5xl">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
             $CLIPR
           </h1>
         </div>
@@ -274,7 +274,7 @@ export default function TokenPage() {
             href={solscanTokenUrl(CLIPR_MINT)}
             target="_blank"
             rel="noreferrer"
-            className="font-mono text-[10px] uppercase tracking-micro text-ink-400 transition hover:text-ink-50"
+            className="text-xs font-medium text-ink-400 transition hover:text-ink-50"
           >
             Solscan ↗
           </a>
@@ -282,7 +282,7 @@ export default function TokenPage() {
             href={dexscreenerTokenUrl(CLIPR_MINT)}
             target="_blank"
             rel="noreferrer"
-            className="font-mono text-[10px] uppercase tracking-micro text-ink-400 transition hover:text-ink-50"
+            className="text-xs font-medium text-ink-400 transition hover:text-ink-50"
           >
             Dexscreener ↗
           </a>
@@ -297,7 +297,7 @@ export default function TokenPage() {
       <section className="mt-20">
         <Reveal>
           <Micro>Tokenomics</Micro>
-          <h2 className="mt-3 max-w-2xl font-display text-3xl font-semibold tracking-tight text-ink-50 sm:text-4xl">
+          <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-ink-50 sm:text-4xl">
             Every payout splits <span className="text-brand-300">90 / 10.</span>
           </h2>
         </Reveal>
@@ -305,7 +305,7 @@ export default function TokenPage() {
         <Reveal delay={0.08} className="mt-8">
           <div className="flex h-3 w-full overflow-hidden rounded-full border border-ink-700">
             <motion.div
-              className="h-full bg-brand-500"
+              className="h-full bg-ink-50"
               initial={{ width: 0 }}
               whileInView={{ width: '90%' }}
               viewport={{ once: true }}
@@ -319,8 +319,8 @@ export default function TokenPage() {
               transition={{ duration: 1, delay: 0.15, ease: EASE }}
             />
           </div>
-          <div className="mt-3 flex justify-between font-mono text-[10px] uppercase tracking-micro">
-            <span className="text-brand-300">Clippers · 90%</span>
+          <div className="mt-3 flex justify-between text-xs font-medium">
+            <span className="text-ink-50">Clippers · 90%</span>
             <span className="text-ink-200">Protocol · 10%</span>
           </div>
         </Reveal>
@@ -342,7 +342,7 @@ export default function TokenPage() {
           ].map((c) => (
             <StaggerItem key={c.title}>
               <Card hover={false} className="h-full p-7">
-                <h3 className="font-display text-lg font-medium text-ink-50">{c.title}</h3>
+                <h3 className="font-display text-lg font-bold text-ink-50">{c.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-400">{c.body}</p>
               </Card>
             </StaggerItem>

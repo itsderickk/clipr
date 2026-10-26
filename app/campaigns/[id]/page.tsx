@@ -106,18 +106,18 @@ export default function CampaignDetail() {
       <Reveal>
         <Link
           href="/campaigns"
-          className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-400 transition hover:text-ink-50"
+          className="group inline-flex items-center gap-2 text-[13px] font-medium text-ink-400 transition hover:text-ink-50"
         >
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
           All campaigns
         </Link>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           <Badge status={c.status} pulse={c.status === 'ACTIVE'} />
-          <span className="font-mono text-[11px] uppercase tracking-micro text-ink-500">
+          <span className="text-[13px] font-medium text-ink-500">
             by {shortAddr(c.creatorWallet)} · {timeAgo(c.createdAt)}
           </span>
         </div>
-        <h1 className="mt-4 max-w-3xl font-display text-4xl font-semibold tracking-tight text-ink-50 sm:text-5xl">
+        <h1 className="mt-4 max-w-3xl font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
           {c.title}
         </h1>
       </Reveal>
@@ -135,7 +135,7 @@ export default function CampaignDetail() {
                 href={c.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="group mt-5 inline-flex items-center gap-2 rounded-lg border border-ink-600 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-200 transition hover:border-ink-300"
+                className="group mt-5 inline-flex items-center gap-2 rounded-lg border border-ink-600 px-4 py-2.5 text-[13px] font-medium text-ink-200 transition hover:border-ink-300"
               >
                 <Link2 className="h-3.5 w-3.5" /> Source content
                 <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -177,12 +177,12 @@ export default function CampaignDetail() {
                     >
                       <CheckCircle2 className="h-10 w-10 text-ink-50" />
                     </motion.div>
-                    <p className="font-mono text-[11px] uppercase tracking-micro text-ink-300">
+                    <p className="text-[13px] font-medium text-ink-300">
                       In review
                     </p>
                   </motion.div>
                 )}
-                <h3 className="font-display text-xl font-medium text-ink-50">Submit a clip</h3>
+                <h3 className="font-display text-xl font-bold text-ink-50">Submit a clip</h3>
                 <p className="mt-1.5 text-sm text-ink-400">
                   Post your edit, then drop the public link here. Earnings are computed from
                   verified views at {fmtUsd(c.ratePerThousand)} per 1,000. Payouts land in your Whop
@@ -190,7 +190,7 @@ export default function CampaignDetail() {
                 </p>
 
                 {c.status !== 'ACTIVE' ? (
-                  <p className="mt-6 rounded-lg border border-ink-700 bg-ink-850 px-4 py-3 font-mono text-[11px] uppercase tracking-micro text-ink-400">
+                  <p className="mt-6 rounded-lg border border-ink-700 bg-ink-850 px-4 py-3 text-[13px] font-medium text-ink-400">
                     This campaign is not accepting clips right now
                   </p>
                 ) : (
@@ -202,7 +202,7 @@ export default function CampaignDetail() {
                           <button
                             key={p}
                             onClick={() => setPlatform(p)}
-                            className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.12em] transition-all ${
+                            className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-[13px] font-medium transition-all ${
                               platform === p
                                 ? 'border-ink-50 bg-ink-50 text-ink-950'
                                 : 'border-ink-600 text-ink-300 hover:border-ink-400'
@@ -301,14 +301,14 @@ export default function CampaignDetail() {
                 <span className="font-display text-4xl font-semibold text-ink-50 tabular">
                   {fmtUsd(c.ratePerThousand)}
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-micro text-ink-400">
+                <span className="text-xs font-medium text-ink-400">
                   per 1K views
                 </span>
               </div>
 
               <div className="mt-7 space-y-4">
                 <div>
-                  <div className="mb-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-micro text-ink-400">
+                  <div className="mb-2 flex items-center justify-between text-xs font-medium text-ink-400">
                     <span>Budget spent</span>
                     <span className="tabular text-ink-200">
                       {fmtUsd(c.spentCents)} / {fmtUsd(c.budgetCents)}
@@ -344,7 +344,7 @@ export default function CampaignDetail() {
 function Row({ k, v, strong }: { k: string; v: ReactNode; strong?: boolean }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="font-mono text-[10px] uppercase tracking-micro text-ink-400">{k}</span>
+      <span className="text-xs font-medium text-ink-400">{k}</span>
       <span className={`font-mono text-xs tabular ${strong ? 'text-ink-50' : 'text-ink-200'}`}>{v}</span>
     </div>
   );

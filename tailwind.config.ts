@@ -6,18 +6,19 @@ const config: Config = {
     extend: {
       colors: {
         ink: {
-          950: '#0A0416',
-          900: '#120A26',
-          850: '#180F33',
-          800: '#201546',
-          700: '#2E1F5E',
-          600: '#3F2E7A',
-          500: '#8C7FBD',
-          400: '#A79BD1',
-          300: '#C2B8E3',
-          200: '#DAD3F0',
-          100: '#ECE7FA',
-          50: '#F8F6FE',
+          // X-style neutrals: true black canvas, cool grays, soft white text
+          950: '#000000',
+          900: '#0A0A0B',
+          850: '#101113',
+          800: '#16181C',
+          700: '#2F3336',
+          600: '#3E4246',
+          500: '#71767B',
+          400: '#8B9096',
+          300: '#AAB0B6',
+          200: '#CDD1D5',
+          100: '#DFE2E5',
+          50: '#E7E9EA',
         },
         brand: {
           300: '#C4B5FD',
@@ -28,7 +29,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+        display: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       letterSpacing: {
