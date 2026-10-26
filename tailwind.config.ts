@@ -48,6 +48,14 @@ const config: Config = {
           '0%, 100%': { opacity: '1', transform: 'scale(1)' },
           '50%': { opacity: '0.35', transform: 'scale(0.75)' },
         },
+        glow: {
+          '0%, 100%': { opacity: '0.75', transform: 'scale(1)' },
+          '50%': { opacity: '1', transform: 'scale(1.08)' },
+        },
+        sheen: {
+          '0%': { backgroundPosition: '0% center' },
+          '100%': { backgroundPosition: '200% center' },
+        },
         drift: {
           '0%': { transform: 'translate(0,0)' },
           '50%': { transform: 'translate(4%, -3%)' },
@@ -60,6 +68,8 @@ const config: Config = {
         shimmer: 'shimmer 1.6s linear infinite',
         'pulse-dot': 'pulseDot 2.2s ease-in-out infinite',
         drift: 'drift 18s ease-in-out infinite',
+        glow: 'glow 8s ease-in-out infinite',
+        sheen: 'sheen 6s linear infinite',
       },
     },
   },

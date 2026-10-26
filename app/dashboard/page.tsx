@@ -72,8 +72,7 @@ export default function Dashboard() {
     <div className="mx-auto min-h-[80vh] max-w-7xl px-5 py-14 sm:px-8">
       <Reveal className="flex flex-wrap items-end justify-between gap-6">
         <div>
-          <Micro>Dashboard</Micro>
-          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink-50">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-ink-50">
             {user.username || shortAddr(user.wallet, 5)}
           </h1>
         </div>

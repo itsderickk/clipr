@@ -126,8 +126,7 @@ export default function NewCampaign() {
       </Link>
 
       <div className="mt-8">
-        <Micro>New campaign</Micro>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink-50">
+        <h1 className="font-display text-4xl font-bold tracking-tight text-ink-50">
           Put a rate on your views
         </h1>
       </div>
