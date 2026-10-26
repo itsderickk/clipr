@@ -188,10 +188,6 @@ function ClipCard() {
 
   return (
     <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-[18.5rem]">
-      <svg viewBox="0 0 100 100" className="pointer-events-none absolute -inset-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)] -rotate-90" aria-hidden>
-        <circle cx="50" cy="50" r="48" fill="none" stroke="#16181C" strokeWidth="0.6" />
-        <motion.circle cx="50" cy="50" r="48" fill="none" stroke="#A78BFA" strokeWidth="0.6" strokeLinecap="round" animate={{ pathLength: p }} transition={{ duration: 0.1, ease: 'linear' }} />
-      </svg>
       <motion.div
         animate={{ scale: paid ? [1, 1.04, 1] : 1 }}
         transition={{ duration: 0.5 }}
