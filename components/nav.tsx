@@ -37,7 +37,7 @@ const isActive = (pathname: string, href: string) =>
 function Avatar({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' }) {
   return (
     <span
-      className={`flex shrink-0 items-center justify-center rounded-full bg-brand-500 font-bold uppercase text-white ${
+      className={`flex shrink-0 items-center justify-center rounded-full bg-ink-700 font-bold uppercase text-ink-50 ${
         size === 'sm' ? 'h-8 w-8 text-sm' : 'h-10 w-10 text-base'
       }`}
     >
@@ -176,10 +176,10 @@ export function Nav() {
         </nav>
 
         <Link href="/campaigns/new" className="mt-4 w-full" aria-label="Launch a campaign">
-          <span className="hidden h-[52px] w-full items-center justify-center rounded-full bg-brand-500 text-[17px] font-bold text-white transition hover:bg-brand-600 xl:flex">
+          <span className="hidden h-[52px] w-full items-center justify-center rounded-full bg-ink-50 text-[17px] font-bold text-ink-950 transition hover:bg-ink-200 xl:flex">
             Launch campaign
           </span>
-          <span className="mx-auto flex h-[52px] w-[52px] items-center justify-center rounded-full bg-brand-500 text-white transition hover:bg-brand-600 xl:hidden">
+          <span className="mx-auto flex h-[52px] w-[52px] items-center justify-center rounded-full bg-ink-50 text-ink-950 transition hover:bg-ink-200 xl:hidden">
             <Plus className="h-6 w-6" strokeWidth={2.5} />
           </span>
         </Link>
@@ -233,7 +233,7 @@ export function Nav() {
       <Link
         href="/campaigns/new"
         aria-label="Launch a campaign"
-        className="fixed bottom-[72px] right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand-500 text-white shadow-[0_4px_16px_rgba(139,92,246,0.45)] transition hover:bg-brand-600 lg:hidden"
+        className="fixed bottom-[72px] right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-ink-50 text-ink-950 shadow-[0_4px_16px_rgba(0,0,0,0.6)] transition hover:bg-ink-200 lg:hidden"
       >
         <Plus className="h-7 w-7" strokeWidth={2.5} />
       </Link>

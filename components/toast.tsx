@@ -42,25 +42,25 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
               exit={{ opacity: 0, x: 24, transition: { duration: 0.25 } }}
               transition={{ duration: 0.45, ease: EASE }}
-              className="pointer-events-auto flex items-start gap-3 rounded-xl bg-brand-500 px-4 py-3 text-white shadow-[0_8px_30px_rgba(0,0,0,0.6)]"
+              className="pointer-events-auto flex items-start gap-3 rounded-xl border border-ink-700 bg-ink-900 px-4 py-3 text-ink-50 shadow-[0_8px_30px_rgba(0,0,0,0.6)]"
             >
               <span
                 className={`mt-0.5 flex h-4 w-4 items-center justify-center rounded-full border ${
                   t.kind === 'success'
-                    ? 'border-white bg-white text-brand-600'
-                    : 'border-white/70 text-white'
+                    ? 'border-brand-400 bg-brand-400 text-ink-950'
+                    : 'border-ink-500 text-ink-200'
                 }`}
               >
                 {t.kind === 'error' ? <X className="h-2.5 w-2.5" /> : <Check className="h-2.5 w-2.5" />}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-[15px] leading-snug text-white">{t.message}</p>
+                <p className="text-[15px] leading-snug text-ink-50">{t.message}</p>
                 {t.link && (
                   <a
                     href={t.link.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 text-[13px] font-bold text-white/85 underline-offset-2 transition hover:text-white hover:underline"
+                    className="mt-1 inline-flex items-center gap-1 text-[13px] font-bold text-ink-300 underline-offset-2 transition hover:text-ink-50 hover:underline"
                   >
                     {t.link.label} <ExternalLink className="h-3 w-3" />
                   </a>

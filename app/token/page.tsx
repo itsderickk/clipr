@@ -97,7 +97,7 @@ function PriceChart() {
               key={r}
               onClick={() => setDays(r)}
               className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
-                days === r ? 'bg-brand-500 text-white' : 'text-ink-400 hover:bg-ink-800 hover:text-ink-100'
+                days === r ? 'bg-ink-50 text-ink-950' : 'text-ink-400 hover:bg-ink-800 hover:text-ink-100'
               }`}
             >
               {r === 365 ? '1Y' : r + 'D'}
@@ -214,7 +214,7 @@ function SplitCalculator() {
   const rows = [
     { k: 'Gross payout', v: gross, cls: 'text-ink-200' },
     { k: 'Protocol · 10%', v: fee, cls: 'text-ink-400' },
-    { k: 'Clipper receives', v: net, cls: 'text-brand-300', strong: true },
+    { k: 'Clipper receives', v: net, cls: 'text-ink-50', strong: true },
   ];
 
   return (
@@ -305,7 +305,7 @@ export default function TokenPage() {
         <Reveal delay={0.08} className="mt-8">
           <div className="flex h-3 w-full overflow-hidden rounded-full border border-ink-700">
             <motion.div
-              className="h-full bg-brand-500"
+              className="h-full bg-ink-50"
               initial={{ width: 0 }}
               whileInView={{ width: '90%' }}
               viewport={{ once: true }}
@@ -320,7 +320,7 @@ export default function TokenPage() {
             />
           </div>
           <div className="mt-3 flex justify-between text-xs font-medium">
-            <span className="text-brand-300">Clippers · 90%</span>
+            <span className="text-ink-50">Clippers · 90%</span>
             <span className="text-ink-200">Protocol · 10%</span>
           </div>
         </Reveal>

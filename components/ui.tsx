@@ -26,7 +26,7 @@ export const Button = forwardRef<HTMLButtonElement, BtnProps>(function Button(
   };
   const variants = {
     primary:
-      'bg-brand-500 text-white hover:bg-brand-600',
+      'bg-ink-50 text-ink-950 hover:bg-ink-200',
     ghost: 'bg-transparent text-ink-50 hover:bg-ink-50/10',
     outline:
       'border border-ink-600 bg-transparent text-ink-50 hover:bg-ink-50/10',
@@ -63,14 +63,14 @@ export function Micro({ children, className = '' }: { children: ReactNode; class
 /* ---------- status badge ---------- */
 
 const badgeStyles: Record<string, string> = {
-  ACTIVE: 'border-brand-500/40 bg-brand-500/10 text-brand-300',
+  ACTIVE: 'border-ink-600 text-ink-50',
   DRAFT: 'border-ink-700 text-ink-500',
   PAUSED: 'border-ink-700 text-ink-300',
   COMPLETED: 'border-ink-700 text-ink-500',
   PENDING: 'border-ink-700 text-ink-300',
-  APPROVED: 'border-brand-500/40 bg-brand-500/10 text-brand-300',
+  APPROVED: 'border-ink-600 text-ink-50',
   REJECTED: 'border-ink-700 text-ink-500',
-  PAID: 'bg-brand-500 border-brand-500 text-white',
+  PAID: 'bg-ink-50 border-ink-50 text-ink-950',
 };
 
 export function Badge({ status, pulse }: { status: string; pulse?: boolean }) {
@@ -82,7 +82,7 @@ export function Badge({ status, pulse }: { status: string; pulse?: boolean }) {
     >
       <span
         className={`h-1 w-1 rounded-full ${
-          status === 'PAID' ? 'bg-white' : 'bg-current'
+          status === 'PAID' ? 'bg-ink-950' : status === 'ACTIVE' || status === 'APPROVED' ? 'bg-brand-400' : 'bg-current'
         } ${pulse ? 'animate-pulse-dot' : ''}`}
       />
       {status.toLowerCase()}
@@ -127,7 +127,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
     return (
       <input
         ref={ref}
-        className={`h-11 w-full rounded-md border border-ink-700 bg-ink-950 px-4 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 ${className}`}
+        className={`h-11 w-full rounded-md border border-ink-700 bg-ink-950 px-4 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-ink-300 focus:ring-1 focus:ring-ink-300 ${className}`}
         {...rest}
       />
     );
@@ -139,7 +139,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
     return (
       <textarea
         ref={ref}
-        className={`w-full rounded-md border border-ink-700 bg-ink-950 px-4 py-3 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 ${className}`}
+        className={`w-full rounded-md border border-ink-700 bg-ink-950 px-4 py-3 text-[15px] text-ink-50 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-ink-300 focus:ring-1 focus:ring-ink-300 ${className}`}
         {...rest}
       />
     );
@@ -153,7 +153,7 @@ export function Progress({ value, className = '' }: { value: number; className?:
   return (
     <div className={`h-1 w-full overflow-hidden rounded-full bg-ink-800 ${className}`}>
       <motion.div
-        className="h-full rounded-full bg-brand-500"
+        className="h-full rounded-full bg-ink-50"
         initial={{ width: 0 }}
         whileInView={{ width: `${pct}%` }}
         viewport={{ once: true }}

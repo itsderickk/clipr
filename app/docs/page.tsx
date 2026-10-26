@@ -102,7 +102,7 @@ export default function DocsPage() {
                 className={
                   '-ml-px flex items-baseline gap-2.5 border-l py-1.5 pl-4 text-[13px] font-medium transition ' +
                   (active === s.id
-                    ? 'border-brand-400 text-ink-50'
+                    ? 'border-ink-50 text-ink-50'
                     : 'border-transparent text-ink-500 hover:text-ink-200')
                 }
               >
@@ -280,14 +280,14 @@ export default function DocsPage() {
             <div className="mt-6 space-y-7">
               <SplitBar
                 segments={[
-                  { label: 'Clippers · 90%', pct: 90, bar: 'bg-brand-500', text: 'text-brand-300' },
+                  { label: 'Clippers · 90%', pct: 90, bar: 'bg-ink-50', text: 'text-ink-50' },
                   { label: 'Protocol · 10%', pct: 10, bar: 'bg-ink-50', text: 'text-ink-200' },
                 ]}
               />
               <SplitBar
                 segments={[
-                  { label: '$CLIPR buybacks · 60%', pct: 60, bar: 'bg-brand-500', text: 'text-brand-300' },
-                  { label: 'Clipr campaigns · 30%', pct: 30, bar: 'bg-brand-300', text: 'text-brand-400' },
+                  { label: '$CLIPR buybacks · 60%', pct: 60, bar: 'bg-ink-50', text: 'text-ink-50' },
+                  { label: 'Clipr campaigns · 30%', pct: 30, bar: 'bg-ink-400', text: 'text-ink-300' },
                   { label: 'Operations · 10%', pct: 10, bar: 'bg-ink-50', text: 'text-ink-200' },
                 ]}
               />
