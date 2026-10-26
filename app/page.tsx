@@ -16,6 +16,7 @@ import { fmtNum, fmtUsd, shortAddr, timeAgo } from '@/lib/format';
 import { AnimatedNumber, EASE, Marquee, Reveal } from '@/components/motion';
 import { Button } from '@/components/ui';
 import { PlatformIcon } from '@/components/icons';
+import { StepScreen } from '@/components/step-screens';
 
 type Activity = { kind: 'payout' | 'deposit' | 'campaign' | 'clip'; amount: number; wallet: string | null; title: string; createdAt: string };
 
@@ -254,12 +255,13 @@ function ClipJourney() {
   useMotionValueEvent(scrollYProgress, 'change', (v) => setP(v));
 
   const stage = Math.min(STAGES.length - 1, Math.floor(p * STAGES.length));
+  const t = Math.min(1, p * STAGES.length - stage);
 
   return (
     <section ref={ref} id="how" className="relative h-[320vh] scroll-mt-0">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
         <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-600/10 blur-3xl" />
-        <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-2">
+        <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 px-5 sm:px-8 lg:grid-cols-2 lg:gap-12">
           <div>
             <div className="relative h-[7.5rem] sm:h-[9rem]">
               <AnimatePresence mode="wait">
@@ -291,7 +293,7 @@ function ClipJourney() {
             </div>
           </div>
 
-          <SimBoard />
+          <StepScreen stage={stage} t={t} />
         </div>
       </div>
     </section>
@@ -448,6 +450,9 @@ export default function Landing() {
             </Reveal>
           ))}
         </div>
+        <Reveal className="mx-auto mt-16 max-w-xl">
+          <SimBoard />
+        </Reveal>
       </section>
 
       {/* ---------------- scroll story ---------------- */}
