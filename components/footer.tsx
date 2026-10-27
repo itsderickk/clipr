@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Github } from 'lucide-react';
 import { XIcon } from './icons';
+import { X_URL } from './nav';
 
 const COLUMNS = [
   {
@@ -53,10 +54,10 @@ export function Footer() {
                 <Github className="h-4 w-4" />
               </a>
               <a
-                href="https://x.com"
+                href={X_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="X"
+                aria-label="@ClippaRun on X"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-700 text-ink-50 transition hover:bg-ink-50/10"
               >
                 <XIcon className="h-3.5 w-3.5" />
