@@ -226,7 +226,7 @@ function GrowScreen({ t }: { t: number }) {
   );
 }
 
-/* ---------- 3. Clipr verifying the submission ---------- */
+/* ---------- 3. Clippa verifying the submission ---------- */
 const CHECKS = [
   { label: 'Account ownership verified', at: 0.3 },
   { label: `${VIEWS.toLocaleString('en-US')} views confirmed`, at: 0.45 },
@@ -302,9 +302,9 @@ function VerifyScreen({ t }: { t: number }) {
 /* ---------- 4. USDC landing in the wallet ---------- */
 const BALANCE = 1204.1;
 const HISTORY = [
-  { label: 'Received', sub: 'Clipr escrow', amt: '+96.40', ago: '3d' },
+  { label: 'Received', sub: 'Clippa escrow', amt: '+96.40', ago: '3d' },
   { label: 'Sent', sub: '7xKX…9fQa', amt: '−40.00', ago: '5d' },
-  { label: 'Received', sub: 'Clipr escrow', amt: '+152.10', ago: '1w' },
+  { label: 'Received', sub: 'Clippa escrow', amt: '+152.10', ago: '1w' },
 ];
 
 function PaidScreen({ t }: { t: number }) {
@@ -324,7 +324,7 @@ function PaidScreen({ t }: { t: number }) {
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#2775CA] text-[10px] font-bold text-white">$</span>
             <div className="text-[11px] leading-tight text-ink-200">
               <div className="font-bold text-ink-50">Received {PAYOUT.toFixed(2)} USDC</div>
-              From Clipr escrow · Solana
+              From Clippa escrow · Solana
             </div>
           </motion.div>
         )}
@@ -362,7 +362,7 @@ function PaidScreen({ t }: { t: number }) {
                 </span>
                 <div className="flex-1 text-[11px]">
                   <div className="font-bold text-ink-50">Received</div>
-                  <div className="text-ink-400">{t > 0.6 ? 'Confirmed · 4mKp…Xq2Z' : 'Clipr escrow'}</div>
+                  <div className="text-ink-400">{t > 0.6 ? 'Confirmed · 4mKp…Xq2Z' : 'Clippa escrow'}</div>
                 </div>
                 <div className="text-right text-[11px]">
                   <div className="font-bold text-[#14F195] tabular">+{PAYOUT.toFixed(2)}</div>

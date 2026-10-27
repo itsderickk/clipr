@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Github } from 'lucide-react';
 import { XIcon } from './icons';
+import { X_URL } from './nav';
 
 const COLUMNS = [
   {
@@ -37,7 +38,7 @@ export function Footer() {
           <div className="max-w-xs">
             <div className="flex items-center gap-2.5">
               <img src="/logo.png" alt="" className="h-7 w-7 rounded-lg" />
-              <span className="font-display text-xl font-bold text-ink-50">Clipr</span>
+              <span className="font-display text-xl font-bold text-ink-50">Clippa</span>
             </div>
             <p className="mt-3 text-[15px] leading-relaxed text-ink-500">
               The settlement layer for short-form clips. Creators fund campaigns, clippers earn per 1,000 verified views.
@@ -53,10 +54,10 @@ export function Footer() {
                 <Github className="h-4 w-4" />
               </a>
               <a
-                href="https://x.com"
+                href={X_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="X"
+                aria-label="@ClippaRun on X"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-700 text-ink-50 transition hover:bg-ink-50/10"
               >
                 <XIcon className="h-3.5 w-3.5" />
@@ -87,7 +88,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-ink-800 pt-6 text-[13px] text-ink-600">
-          <span>© 2026 Clipr</span>
+          <span>© 2026 Clippa</span>
           <span>Settled in USDC on Solana · Not affiliated with X Corp.</span>
         </div>
       </div>

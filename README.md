@@ -1,10 +1,10 @@
-# Clipr
+# Clippa
 
 **Post a job. Make the clip. Get paid.** A clipping marketplace: creators post campaigns with a rate per 1,000 views and fund the campaign's own escrow wallet, clippers submit their posts, and approved clips are paid out per 1,000 verified views from that wallet straight to the clipper's wallet.
 
 Next.js 14 App Router + Tailwind + Framer Motion, Sign in with Solana (wallet-signed message), a platform-custodied escrow wallet per campaign (USDC on Solana, or a manual off-chain rail), an append-only escrow ledger, and Postgres (Neon serverless driver with a node-postgres fallback).
 
-> **Note:** this repository is a rebuild of the Clipr app that was deployed to Vercel (`clipr-vercel-drop-bl86.vercel.app`) without a linked Git repo. The UI, routes, file layout and data model follow the live deployment; the code is not byte-for-byte identical to the original. See *Before real money moves* below.
+> **Note:** this repository is a rebuild of the Clippa app that was deployed to Vercel (`clipr-vercel-drop-bl86.vercel.app`) without a linked Git repo. The UI, routes, file layout and data model follow the live deployment; the code is not byte-for-byte identical to the original. See *Before real money moves* below.
 
 Start with [`SECURITY.md`](./SECURITY.md) for the threat model and audit map, and `/docs` in the running app for the plain-English version.
 
@@ -15,7 +15,7 @@ Start with [`SECURITY.md`](./SECURITY.md) for the threat model and audit map, an
 ```bash
 cp .env.example .env    # fill DATABASE_URL, JWT_SECRET and the escrow settings
 psql "$DATABASE_URL" -f db/schema.sql
-node scripts/seed.mjs   # optional: one Clipr campaign per platform ($5,000 total)
+node scripts/seed.mjs   # optional: one Clippa campaign per platform ($5,000 total)
 npm install && npm run dev
 # → http://localhost:3000
 ```

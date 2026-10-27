@@ -19,7 +19,10 @@ import {
 } from 'lucide-react';
 import { useAuth } from './providers';
 import { Button } from './ui';
+import { XIcon } from './icons';
 import { shortAddr } from '@/lib/format';
+
+export const X_URL = 'https://x.com/ClippaRun';
 
 type NavLink = { href: string; label: string; icon: LucideIcon; mobile?: boolean };
 
@@ -51,7 +54,7 @@ function Logo() {
   return (
     <Link
       href="/"
-      aria-label="Clipr home"
+      aria-label="Clippa home"
       className="flex h-[52px] w-[52px] items-center justify-center rounded-full transition hover:bg-ink-50/10"
     >
       <img src="/logo.png" alt="" className="h-8 w-8 rounded-lg" />
@@ -184,6 +187,12 @@ export function Nav() {
               </Link>
             );
           })}
+          <a href={X_URL} target="_blank" rel="noreferrer" className="group flex xl:block" title="@ClippaRun on X">
+            <span className="inline-flex items-center gap-5 rounded-full p-3 text-xl text-ink-50 transition group-hover:bg-ink-50/10 xl:pr-6">
+              <XIcon className="h-[24px] w-[26px]" />
+              <span className="hidden xl:inline">@ClippaRun</span>
+            </span>
+          </a>
         </nav>
 
         <Link href="/campaigns/new" className="mt-4 w-full" aria-label="Launch a campaign">
@@ -202,14 +211,23 @@ export function Nav() {
 
       {/* ---------- mobile: top bar ---------- */}
       <header className="fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between border-b border-ink-700 bg-ink-950/70 px-4 backdrop-blur-md lg:hidden">
-        <div className="w-20">
+        <div className="flex w-20 items-center gap-2">
           {address && (
             <Link href="/dashboard" aria-label="Dashboard">
               <Avatar name={user?.username || address} size="sm" />
             </Link>
           )}
+          <a
+            href={X_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="@ClippaRun on X"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-ink-50 transition hover:bg-ink-50/10"
+          >
+            <XIcon className="h-4 w-4" />
+          </a>
         </div>
-        <Link href="/" aria-label="Clipr home">
+        <Link href="/" aria-label="Clippa home">
           <img src="/logo.png" alt="" className="h-7 w-7 rounded-lg" />
         </Link>
         <div className="flex w-20 justify-end">

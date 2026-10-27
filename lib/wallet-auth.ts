@@ -7,7 +7,7 @@ import { isSolanaAddress } from './solana-address';
 
 export function signInMessage(opts: { domain: string; address: string; nonce: string; issuedAt: string }) {
   return [
-    `${opts.domain} wants you to sign in to Clipr with your Solana account:`,
+    `${opts.domain} wants you to sign in to Clippa with your Solana account:`,
     opts.address,
     '',
     'This only proves you own this wallet. It costs nothing and moves no funds.',

@@ -22,12 +22,12 @@ type Activity = { kind: 'payout' | 'deposit' | 'campaign' | 'clip'; amount: numb
 
 /* Shown in the ticker only until real campaigns exist. */
 const EXAMPLES: Pick<Campaign, 'id' | 'title' | 'platforms' | 'ratePerThousand' | 'budgetCents' | 'spentCents'>[] = [
-  { id: 'ex1', title: 'Clipr — TikTok launch clips', platforms: ['tiktok'], ratePerThousand: 100, budgetCents: 125000, spentCents: 0 },
-  { id: 'ex2', title: 'Clipr — YouTube Shorts explainers', platforms: ['youtube'], ratePerThousand: 150, budgetCents: 125000, spentCents: 0 },
-  { id: 'ex3', title: 'Clipr — Instagram Reels', platforms: ['instagram'], ratePerThousand: 80, budgetCents: 125000, spentCents: 0 },
-  { id: 'ex4', title: 'Clipr — Posts on X', platforms: ['x'], ratePerThousand: 120, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex1', title: 'Clippa — TikTok launch clips', platforms: ['tiktok'], ratePerThousand: 100, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex2', title: 'Clippa — YouTube Shorts explainers', platforms: ['youtube'], ratePerThousand: 150, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex3', title: 'Clippa — Instagram Reels', platforms: ['instagram'], ratePerThousand: 80, budgetCents: 125000, spentCents: 0 },
+  { id: 'ex4', title: 'Clippa — Posts on X', platforms: ['x'], ratePerThousand: 120, budgetCents: 125000, spentCents: 0 },
 ];
-/* $5,000 across the four Clipr campaigns; shown as the live budget until real stats exist. */
+/* $5,000 across the four Clippa campaigns; shown as the live budget until real stats exist. */
 const EXAMPLE_BUDGET_CENTS = EXAMPLES.reduce((t, c) => t + c.budgetCents - c.spentCents, 0);
 
 /* Simulated clips for the hero board. Purely illustrative. */
@@ -53,7 +53,7 @@ const LEDGER = [
 ];
 
 const FAQ = [
-  { q: 'How does a campaign get funded?', a: "Creators send USDC to the campaign's own escrow wallet. Clipr holds it and pays clippers from it, and every movement is on the ledger." },
+  { q: 'How does a campaign get funded?', a: "Creators send USDC to the campaign's own escrow wallet. Clippa holds it and pays clippers from it, and every movement is on the ledger." },
   { q: 'How are clippers paid?', a: "Approved clips earn the posted rate per 1,000 verified views, sent as USDC from the campaign wallet straight to the clipper's own wallet." },
   { q: 'What if a clip keeps getting views?', a: 'Each settlement pays only the difference between what a clip has earned and what it has already been paid, up to the campaign cap.' },
   { q: 'Can creators get unspent budget back?', a: 'Yes. Remaining budget can be withdrawn from the campaign at any time.' },

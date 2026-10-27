@@ -1,5 +1,5 @@
 /**
- * End-to-end test of the Clipr API against a running instance.
+ * End-to-end test of the Clippa API against a running instance.
  * Covers wallet sign-in (real ed25519 signatures), campaign creation, clip
  * submission, review/approval math, auth boundaries and the escrow ledger on
  * the manual rail: deposits, idempotent credits, payout reservations,

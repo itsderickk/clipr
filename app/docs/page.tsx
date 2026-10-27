@@ -82,7 +82,7 @@ export default function DocsPage() {
     <div className="mx-auto min-h-[80vh] max-w-7xl px-5 py-14 sm:px-8">
       <Reveal>
         <h1 className="font-display text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
-          How Clipr works
+          How Clippa works
         </h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-300">
           Everything under the hood — the money flow, the payout gates, who can do what, where the
@@ -120,7 +120,7 @@ export default function DocsPage() {
               A settlement layer for clips
             </h2>
             <P>
-              Clipr is a marketplace where creators buy distribution and clippers get paid for it.
+              Clippa is a marketplace where creators buy distribution and clippers get paid for it.
               A creator posts a campaign with a rate per 1,000 views and funds its escrow wallet
               with USDC. Clippers cut the source content, post it to TikTok, YouTube, Instagram
               or X, and submit their links. Approved clips earn the posted rate on verified views,
@@ -144,7 +144,7 @@ export default function DocsPage() {
               posts and files the link, which sits pending with no money moving;{' '}
               <Mono>VIEWS_VERIFIED</Mono> — the submission is reviewed against the campaign and a
               view count is attached, automatically from the YouTube Data API for YouTube links
-              and at review time for other platforms; and <Mono>PAYOUT_CLEARED</Mono> — Clipr
+              and at review time for other platforms; and <Mono>PAYOUT_CLEARED</Mono> — Clippa
               sends USDC from the campaign wallet to the clipper&apos;s wallet, with the transaction
               signature as the receipt.
             </P>
@@ -156,7 +156,7 @@ export default function DocsPage() {
               One escrow wallet per campaign
             </h2>
             <P>
-              Every campaign gets its own wallet, held by Clipr. Money for one campaign never
+              Every campaign gets its own wallet, held by Clippa. Money for one campaign never
               mixes with another&apos;s: the creator funds that wallet, payouts and refunds leave
               from it, and its on-chain balance can be checked by anyone.
             </P>
@@ -238,8 +238,8 @@ export default function DocsPage() {
               Where the trust actually sits
             </h2>
             <P>
-              Clipr is custodial in this release, and the docs would be dishonest not to spell out
-              what that means. Each campaign&apos;s budget sits in its own wallet whose keys Clipr
+              Clippa is custodial in this release, and the docs would be dishonest not to spell out
+              what that means. Each campaign&apos;s budget sits in its own wallet whose keys Clippa
               holds. What it gives you: per-campaign wallets you can audit on chain, an
               append-only ledger, and a transaction signature for every settlement.
               What it does not give you: trustlessness.
@@ -262,7 +262,7 @@ export default function DocsPage() {
               10% in — 60% back into the chart
             </h2>
             <P>
-              Clipr charges exactly one fee: <span className="text-ink-50">10% of each
+              Clippa charges exactly one fee: <span className="text-ink-50">10% of each
               payout</span>, taken at the moment of settlement. Clippers keep 90% of everything
               they earn. There are no listing fees, no subscriptions, and no cut of creator
               deposits — an unspent budget withdraws in full.
@@ -277,7 +277,7 @@ export default function DocsPage() {
               <SplitBar
                 segments={[
                   { label: '$CLIPR buybacks · 60%', pct: 60, bar: 'bg-ink-50', text: 'text-ink-50' },
-                  { label: 'Clipr campaigns · 30%', pct: 30, bar: 'bg-ink-400', text: 'text-ink-300' },
+                  { label: 'Clippa campaigns · 30%', pct: 30, bar: 'bg-ink-400', text: 'text-ink-300' },
                   { label: 'Operations · 10%', pct: 10, bar: 'bg-ink-50', text: 'text-ink-200' },
                 ]}
               />
@@ -289,7 +289,7 @@ export default function DocsPage() {
               </span>{' '}
               — straight back into the chart.{' '}
               <span className="text-ink-50">
-                30% funds Clipr-run campaigns on this marketplace
+                30% funds Clippa-run campaigns on this marketplace
               </span>{' '}
               — protocol-funded campaigns that pay clippers directly, making the protocol
               its own biggest creator. The remaining 10% covers operations. Put together, for

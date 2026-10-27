@@ -1,4 +1,4 @@
--- Clipr schema. All money columns are integer cents (USD; 1 USDC = 100 cents).
+-- Clippa schema. All money columns are integer cents (USD; 1 USDC = 100 cents).
 create extension if not exists pgcrypto;
 
 create table if not exists users (

@@ -9,7 +9,7 @@ export const manualRail: Rail = {
   currency: 'USD',
   configured: () => true,
   depositAddress: () => null,
-  depositDetails: () => ({ instructions: 'Contact the Clipr team to fund this campaign.' }),
+  depositDetails: () => ({ instructions: 'Contact the Clippa team to fund this campaign.' }),
   validDestination: (address) => isSolanaAddress(address),
   async send() {
     return { status: 'pending', ref: null };

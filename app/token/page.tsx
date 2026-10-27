@@ -262,7 +262,7 @@ export default function TokenPage() {
           </h1>
         </div>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-300">
-          The economic layer of Clipr. Every settlement that clears through a campaign budget
+          The economic layer of Clippa. Every settlement that clears through a campaign budget
           routes <span className="text-ink-50">10% to the protocol</span> — clippers keep the other
           90%, paid straight to their wallet.
         </p>
@@ -331,11 +331,11 @@ export default function TokenPage() {
             },
             {
               title: 'Revenue follows views',
-              body: 'The protocol earns only when clippers do. Fee volume scales with verified views settled, which keeps Clipr aligned with the editors doing the distribution.',
+              body: 'The protocol earns only when clippers do. Fee volume scales with verified views settled, which keeps Clippa aligned with the editors doing the distribution.',
             },
             {
               title: 'Profits split 60 / 30 / 10',
-              body: '60% of protocol profits buy $CLIPR back on the open market — straight into the chart. 30% funds Clipr-run campaigns on this very marketplace, paying clippers from protocol-owned budgets. 10% covers operations.',
+              body: '60% of protocol profits buy $CLIPR back on the open market — straight into the chart. 30% funds Clippa-run campaigns on this very marketplace, paying clippers from protocol-owned budgets. 10% covers operations.',
             },
           ].map((c) => (
             <StaggerItem key={c.title}>

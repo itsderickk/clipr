@@ -328,7 +328,7 @@ export default function CampaignDetail() {
               <div className="mt-7 border-t border-ink-800 pt-5">
                 <EscrowPanel campaignId={c.id} />
                 <p className="mt-3 text-[11px] leading-relaxed text-ink-500">
-                  This campaign&apos;s budget sits in its own escrow wallet held by Clipr. Every
+                  This campaign&apos;s budget sits in its own escrow wallet held by Clippa. Every
                   deposit, payout and refund is on the ledger above.
                 </p>
               </div>
