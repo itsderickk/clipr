@@ -51,7 +51,7 @@ function Logo() {
   return (
     <Link
       href="/"
-      aria-label="Clipr home"
+      aria-label="Clippa home"
       className="flex h-[52px] w-[52px] items-center justify-center rounded-full transition hover:bg-ink-50/10"
     >
       <img src="/logo.png" alt="" className="h-8 w-8 rounded-lg" />
@@ -209,7 +209,7 @@ export function Nav() {
             </Link>
           )}
         </div>
-        <Link href="/" aria-label="Clipr home">
+        <Link href="/" aria-label="Clippa home">
           <img src="/logo.png" alt="" className="h-7 w-7 rounded-lg" />
         </Link>
         <div className="flex w-20 justify-end">

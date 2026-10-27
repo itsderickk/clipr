@@ -1,4 +1,4 @@
-# Contributing to Clipr
+# Contributing to Clippa
 
 ## Getting a dev environment
 

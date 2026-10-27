@@ -1,12 +1,12 @@
 /**
- * Seeds a Clipr creator + one campaign per platform (TikTok, YouTube, Instagram, X),
- * each asking clippers to post about Clipr itself. The creator's wallet is a placeholder nobody holds a key for, so nobody
+ * Seeds a Clippa creator + one campaign per platform (TikTok, YouTube, Instagram, X),
+ * each asking clippers to post about Clippa itself. The creator's wallet is a placeholder nobody holds a key for, so nobody
  * can sign in as it, and its campaigns have no escrow wallet — their budgets
  * are display-only.
  *
  *   DATABASE_URL=postgresql://... node scripts/seed.mjs
  *
- * Idempotent: exits if a 'clipr' user already exists.
+ * Idempotent: exits if a 'clippa' user already exists.
  * To remove the demo rows later, run the reset block in db/seed.sql.
  */
 import pg from 'pg';
@@ -16,65 +16,65 @@ const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 // Money is integer cents; rate is cents per 1,000 views. Four campaigns × $1,250 = $5,000 live budget.
 const CAMPAIGNS = [
   {
-    title: 'Clipr — TikTok launch clips',
+    title: 'Clippa — TikTok launch clips',
     description:
-      'Make short TikToks about Clipr: creators fund a campaign, clippers post, and every verified 1,000 views pays out. Show the dashboard or a payout moment in the first 3 seconds.',
+      'Make short TikToks about Clippa: creators fund a campaign, clippers post, and every verified 1,000 views pays out. Show the dashboard or a payout moment in the first 3 seconds.',
     source: 'https://github.com/itsderickk/clipr',
     platforms: '{tiktok}',
     rate: 100,
     budget: 125000,
     minViews: 1000,
     cap: 25000,
-    reqs: 'Vertical 9:16 · captions on · tag @clipr',
+    reqs: 'Vertical 9:16 · captions on · tag @clippa',
   },
   {
-    title: 'Clipr — YouTube Shorts explainers',
+    title: 'Clippa — YouTube Shorts explainers',
     description:
-      'Explain Clipr in under 60 seconds on YouTube Shorts: how campaigns are funded, how views are verified, and how clippers get paid in USDC.',
+      'Explain Clippa in under 60 seconds on YouTube Shorts: how campaigns are funded, how views are verified, and how clippers get paid in USDC.',
     source: 'https://github.com/itsderickk/clipr',
     platforms: '{youtube}',
     rate: 150,
     budget: 125000,
     minViews: 1000,
     cap: 25000,
-    reqs: 'Vertical 9:16 · under 60s · link clipr in the description',
+    reqs: 'Vertical 9:16 · under 60s · link clippa in the description',
   },
   {
-    title: 'Clipr — Instagram Reels',
+    title: 'Clippa — Instagram Reels',
     description:
-      'Reels about clipping for Clipr campaigns: a day of clipping, first payout, or picking a campaign. Keep it fast and caption every line.',
+      'Reels about clipping for Clippa campaigns: a day of clipping, first payout, or picking a campaign. Keep it fast and caption every line.',
     source: 'https://github.com/itsderickk/clipr',
     platforms: '{instagram}',
     rate: 80,
     budget: 125000,
     minViews: 1000,
     cap: 25000,
-    reqs: 'Vertical 9:16 · captions on · tag @clipr',
+    reqs: 'Vertical 9:16 · captions on · tag @clippa',
   },
   {
-    title: 'Clipr — Posts on X',
+    title: 'Clippa — Posts on X',
     description:
-      'Post clips or short videos on X that show what Clipr is and why clippers use it. Threads with an attached clip count if the clip is yours.',
+      'Post clips or short videos on X that show what Clippa is and why clippers use it. Threads with an attached clip count if the clip is yours.',
     source: 'https://github.com/itsderickk/clipr',
     platforms: '{x}',
     rate: 120,
     budget: 125000,
     minViews: 1000,
     cap: 25000,
-    reqs: 'Native video · mention @clipr · no reposted footage',
+    reqs: 'Native video · mention @clippa · no reposted footage',
   },
 ];
 
 const client = await pool.connect();
 try {
-  const existing = await client.query("select id from users where username = 'clipr' limit 1");
+  const existing = await client.query("select id from users where username = 'clippa' limit 1");
   if (existing.rows.length) {
     console.log('Demo data already present — nothing to do.');
     process.exit(0);
   }
   await client.query('begin');
   const { rows } = await client.query(
-    "insert into users (wallet, username) values ('C1iprCampaignSeedCreator1111111111111111111', 'clipr') returning id"
+    "insert into users (wallet, username) values ('C1iprCampaignSeedCreator1111111111111111111', 'clippa') returning id"
   );
   const creatorId = rows[0].id;
   for (const c of CAMPAIGNS) {
@@ -87,7 +87,7 @@ try {
     );
   }
   await client.query('commit');
-  console.log(`Seeded Clipr creator + ${CAMPAIGNS.length} campaigns.`);
+  console.log(`Seeded Clippa creator + ${CAMPAIGNS.length} campaigns.`);
 } catch (e) {
   await client.query('rollback');
   console.error(e);

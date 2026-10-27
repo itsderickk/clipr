@@ -37,7 +37,7 @@ export function Footer() {
           <div className="max-w-xs">
             <div className="flex items-center gap-2.5">
               <img src="/logo.png" alt="" className="h-7 w-7 rounded-lg" />
-              <span className="font-display text-xl font-bold text-ink-50">Clipr</span>
+              <span className="font-display text-xl font-bold text-ink-50">Clippa</span>
             </div>
             <p className="mt-3 text-[15px] leading-relaxed text-ink-500">
               The settlement layer for short-form clips. Creators fund campaigns, clippers earn per 1,000 verified views.
@@ -87,7 +87,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-ink-800 pt-6 text-[13px] text-ink-600">
-          <span>© 2026 Clipr</span>
+          <span>© 2026 Clippa</span>
           <span>Settled in USDC on Solana · Not affiliated with X Corp.</span>
         </div>
       </div>

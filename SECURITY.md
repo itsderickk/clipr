@@ -1,6 +1,6 @@
 # Security Policy
 
-Clipr custodies real money in per-campaign escrow wallets, so this document is written for
+Clippa custodies real money in per-campaign escrow wallets, so this document is written for
 people auditing the code, not just reporting bugs. Read it together with the
 in-app trust-model docs at `/docs#trust`.
 

@@ -5,7 +5,7 @@ import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
 
 export const metadata: Metadata = {
-  title: 'Clipr',
+  title: 'Clippa',
   description:
     'The settlement layer for short-form clips. Creators fund a campaign escrow wallet, clippers post and earn per 1,000 verified views, payouts land in their wallet.',
 };

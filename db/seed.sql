@@ -1,4 +1,4 @@
--- Clipr — demo data
+-- Clippa — demo data
 --
 -- Seeding happens via `scripts/seed.mjs`:
 --
@@ -8,7 +8,7 @@
 -- RESET: remove the rows created by scripts/seed.mjs (current and older demo seeds)
 -- (safe order for foreign keys)
 -- ---------------------------------------------------------------------------
--- delete from ledger_entries where campaign_id in (select c.id from campaigns c join users u on u.id = c.creator_id where u.username in ('clipr', 'demo-creator'));
--- delete from submissions where campaign_id in (select c.id from campaigns c join users u on u.id = c.creator_id where u.username in ('clipr', 'demo-creator'));
--- delete from campaigns   where creator_id  in (select id from users where username in ('clipr', 'demo-creator'));
--- delete from users       where username in ('clipr', 'demo-creator');
+-- delete from ledger_entries where campaign_id in (select c.id from campaigns c join users u on u.id = c.creator_id where u.username in ('clippa', 'clipr', 'demo-creator'));
+-- delete from submissions where campaign_id in (select c.id from campaigns c join users u on u.id = c.creator_id where u.username in ('clippa', 'clipr', 'demo-creator'));
+-- delete from campaigns   where creator_id  in (select id from users where username in ('clippa', 'clipr', 'demo-creator'));
+-- delete from users       where username in ('clippa', 'clipr', 'demo-creator');

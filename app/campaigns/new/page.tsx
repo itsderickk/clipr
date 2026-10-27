@@ -310,7 +310,7 @@ export default function NewCampaign() {
                 <div>
                   <EscrowPanel campaignId={campaign.id} owner onFunded={setFunded} />
                   <p className="mt-4 text-[13px] leading-relaxed text-ink-400">
-                    Send USDC to this campaign&apos;s escrow wallet. Clipr holds it and pays clippers
+                    Send USDC to this campaign&apos;s escrow wallet. Clippa holds it and pays clippers
                     from it; whatever is unspent you can withdraw.
                   </p>
                   <div className="mt-6 flex flex-wrap gap-3">
